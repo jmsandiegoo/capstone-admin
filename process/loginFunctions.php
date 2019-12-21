@@ -4,6 +4,12 @@
     session_start();
     $helper = new Helper();
 
+    if (isset($_SESSION['loggedin'])) {
+        $pageUrl = $helper->pageUrl('home.php');
+        header("Location: $pageUrl");
+        exit;
+    }
+
     if (isset($_POST["authenticate"])) {
         $email = $_POST["email"];
         $password = $_POST["password"];
@@ -35,8 +41,7 @@
                 $userId = $row["id"]; 
                 $correctPassword = $row["password"];
                 echo "Password: $password". gettype($password) . "Correct: $correctPassword" . gettype($correctPassword);
-                echo $password === $correctPassword;
-                if ($password === $correctPassword) {
+                if (password_verify($password, $correctPassword)) {
                     echo "doesnt go here wtf?";
                     session_regenerate_id();
                     $_SESSION['loggedin'] = TRUE;
@@ -53,7 +58,7 @@
             $_SESSION["email"] = $email;
             $_SESSION["password"] = $password;
             $pageUrl = $helper->pageUrl('index.php');
-            // header("Location: $pageUrl");
+            header("Location: $pageUrl");
             exit;
         }
 

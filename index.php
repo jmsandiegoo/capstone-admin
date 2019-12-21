@@ -4,6 +4,12 @@
     include_once __DIR__.'/helpers/helper.php';
     $helper = new Helper();
 
+    if (isset($_SESSION['loggedin'])) {
+        $pageUrl = $helper->pageUrl('home.php');
+        header("Location: $pageUrl");
+        exit;
+    }
+
     $login_error = "";
     $email = "";
     $password = "";
