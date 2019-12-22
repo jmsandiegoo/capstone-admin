@@ -5,7 +5,7 @@
     $helper = new Helper();
 
     if (isset($_SESSION['loggedin'])) {
-        $pageUrl = $helper->pageUrl('home.php');
+        $pageUrl = $helper->pageUrl('appointment.php');
         header("Location: $pageUrl");
         exit;
     }

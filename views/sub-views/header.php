@@ -15,3 +15,4 @@
     <link rel="stylesheet" href="<?php echo $helper->cssPath("shared.css") ?>"/>
     <link rel="stylesheet" href="<?php echo $helper->cssPath("login.css") ?>"/>
 </head>
+<body>

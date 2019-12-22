@@ -13,6 +13,11 @@ class Helper
         return $file;
     }
 
+    public function viewPath() {
+        $file = __DIR__ . '/../views/' . $file;
+        return $file;
+    }
+
     function cssPath($file) { // return a css file path to for href attributes
         $hrefPath = $this->defaultPath .'assets/css/'. $file;
         return $hrefPath;
@@ -32,12 +37,12 @@ class Helper
         return $url;
     }
 
-    function flatten_array($array, $prefix = '' ) {
-        $result = array();
-        foreach ($array as $key => $value) {
-            
-        }
+    function processUrl($file) {
+        $httpProtocol = !isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on' ? 'http' : 'https';
+        $url = $httpProtocol . '://' . $_SERVER['HTTP_HOST'] . $this->defaultPath;
+        return $url .= 'process/' . $file;
     }
+
     function subPageUrl($file) { // return a page path for href navigation
         $httpProtocol = !isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on' ? 'http' : 'https';
         $url = $httpProtocol . '://' . $_SERVER['HTTP_HOST'] . $this->defaultPath;
