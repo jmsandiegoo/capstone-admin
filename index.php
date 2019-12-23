@@ -1,6 +1,5 @@
 <?php
     session_start();
-
     include_once __DIR__.'/helpers/helper.php';
     $helper = new Helper();
 
@@ -13,6 +12,7 @@
     $login_error = "";
     $email = "";
     $password = "";
+
     if (isset($_SESSION["login_error"])) {
         $login_error = $_SESSION["login_error"];
     }

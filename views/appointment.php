@@ -1,12 +1,16 @@
 <?php 
+    session_start();
     include_once __DIR__.'/../helpers/helper.php';
     $helper = new Helper();
 
-    if (isset($_SESSION['loggedin'])) {
+    if (!isset($_SESSION['loggedin'])) {
+        echo 'goes here';
         $pageUrl = $helper->pageUrl('index.php');
         header("Location: $pageUrl");
         exit;
     }
+
+
 ?>
 
 <!DOCTYPE html>

@@ -1,7 +1,7 @@
-<?php 
+<?php
+    session_start();
     include_once __DIR__. '/../helpers/helper.php';
     include_once __DIR__. '/../helpers/mysql.php';
-    session_start();
     $helper = new Helper();
 
     if (isset($_SESSION['loggedin'])) {
@@ -42,7 +42,6 @@
                 $correctPassword = $row["password"];
                 echo "Password: $password". gettype($password) . "Correct: $correctPassword" . gettype($correctPassword);
                 if (password_verify($password, $correctPassword)) {
-                    echo "doesnt go here wtf?";
                     session_regenerate_id();
                     $_SESSION['loggedin'] = TRUE;
                     $_SESSION['email'] = $email;
