@@ -3,6 +3,7 @@
     include_once __DIR__. '/../helpers/helper.php';
     include_once __DIR__. '/../helpers/mysql.php';
     $helper = new Helper();
+    $db = new Mysql_Driver();
 
     if (isset($_SESSION['loggedin'])) {
         $pageUrl = $helper->pageUrl('appointment.php');
@@ -24,13 +25,12 @@
             exit;
         } else {
             // check if account is valid
-            $db = new Mysql_Driver();
 
             $db->connect();
 
-            $qry = "SELECT * FROM Account WHERE email = '$email'";
+            $qry = "SELECcT * FROM Account WHERE email = ? AND id = ?";
 
-            $result = $db->query($qry);
+            $result = $db->query($qry, $email, 1);
 
             if ($db->num_rows($result) <= 0) {
                 echo "No results";
@@ -63,6 +63,25 @@
 
     } else if (isset($_POST["forgotPassword"])) {
 
+        $selector = bin2hex(random_bytes(8));
+        $token = bin2hex(random_bytes(32));
+
+        $url = $helper->pageUrl('createNewPassword.php'). "?selector=" . $selector . "&validator=" . $token;
+
+        // Set expiry for tokens
+        $expires = date("U") + 1800;
+
+        $email = $_POST["email"];
+        $db->connect();
+        $qry = "DELETE FROM PwdReset WHERE reset_email=?";
+        $result = $db->query($qry, $email);
+
+        $qry = "INSERT INTO PwdReset (reset_email, reset_selector, reset_token, reset_expires) VALUES (?, ?, ?, ?)";
+        
+
+    } else {
+        $pageUrl = $helper->pageUrl('index.php');
+        header("Location: $pageUrl");
     }
 
 ?>
