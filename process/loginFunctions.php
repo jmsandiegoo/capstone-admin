@@ -28,9 +28,11 @@
 
             $db->connect();
 
-            $qry = "SELECcT * FROM Account WHERE email = ? AND id = ?";
+            $qry = "SELECT * FROM Account WHERE email = ?";
 
-            $result = $db->query($qry, $email, 1);
+            $result = $db->query($qry, $email);
+
+            $db->close();
 
             if ($db->num_rows($result) <= 0) {
                 echo "No results";
@@ -64,21 +66,107 @@
     } else if (isset($_POST["forgotPassword"])) {
 
         $selector = bin2hex(random_bytes(8));
-        $token = bin2hex(random_bytes(32));
+        $token = random_bytes(32);
 
-        $url = $helper->pageUrl('createNewPassword.php'). "?selector=" . $selector . "&validator=" . $token;
+        $url = $helper->pageUrl('createNewPassword.php'). "?selector=" . $selector . "&validator=" . bin2hex($token);
 
         // Set expiry for tokens
         $expires = date("U") + 1800;
 
         $email = $_POST["email"];
+
         $db->connect();
         $qry = "DELETE FROM PwdReset WHERE reset_email=?";
         $result = $db->query($qry, $email);
 
         $qry = "INSERT INTO PwdReset (reset_email, reset_selector, reset_token, reset_expires) VALUES (?, ?, ?, ?)";
         
+        $hashedToken = password_hash($token, PASSWORD_DEFAULT);
+        $db->query($qry, $email, $selector, $hashedToken, $expires);
 
+        $db->close();
+
+        // Prepare email
+
+        $to = $userEmail;
+        $subject = 'Reset your password for NP ICT Open House Admin Panel';
+
+        $message = "<p><b>(This is auto-generated. Please do not reply to this email)</b></p>
+                    <p>We received a password reset request. The link to reset your password
+                    make this request, you can ignore this email</p>";
+        $message .= "<p> Here is your password reset link: </br>";
+        $message .= '<a href="' . $url . '">' . $url . '</a></p>';
+
+
+        $headers = "From: npict <npict@gmail.com>\r\n";
+        $headers = "Content-Type: text/html\r\n";
+
+        mail($to, $subject, $message, $headers);
+
+        $pageUrl = $helper->pageUrl('forgotPassword.php') . "?reset=success";
+        header("Location: $pageUrl");
+
+    } else if (isset($_POST["createNewPassword"])) {
+
+        $selector = $_POST["selector"];
+        $validator = $_POST["validator"];
+        $password = $_POST["password"];
+        $cfmPassword = $_POST["cfmPassword"];
+
+        if (empty($password) || empty($cfmPassword)) {
+            $pageUrl = $helper->pageUrl('createNewPassword.php') . "?selector=" . $selector . "&validator=" . $validator . "&error=empty";
+            header("Location: $pageUrl");
+            exit;
+        } else if ($password !== $cfmPassword) {
+            $pageUrl = $helper->pageUrl('createNewPassword.php') . "?selector=" . $selector . "&validator=" . $validator . "&error=pwdnotsame";
+            header("Location: $pageUrl");
+            exit;
+        }
+
+        $currentDate = date("U");
+
+        $db->connect();
+
+        $qry = "SELECT * FROM PwdReset WHERE reset_selector= ? AND reset_expires >= ?";
+
+        $result = $db->query($qry, $selector, $currentDate);
+
+        if ($db->num_rows($result) <= 0) {
+            //  You need to resubmit your reset request
+        }
+
+        while ($row = $db->fetch_array($result)) {
+            $tokenBin = hex2bin($validator);
+            $tokenCheck = password_verify($tokenBin, $row["reset_token"]);
+
+            if (!$tokenCheck) {
+                // You need to resubmit your reset request
+            } else if ($tokenCheck) {
+
+                // Update the password
+
+                $tokenEmail = $row['reset_email'];
+
+                $qry = "SELECT * FROM Account WHERE email=?";
+
+                $accountResult = $db->query($qry, $tokenEmail);
+                
+                if ($db->num_rows($accountResult) <= 0) {
+                    // Something went wrong
+
+                }
+
+                $qry = "UPDATE Account SET password=? WHERE email=?";
+                $db->query($qry, password_hash($password, PASSWORD_DEFAULT), $tokenEmail);
+
+                // Delete tokens after use
+                $qry = "DELETE FROM PwdReset WHERE reset_email=?";
+                $db->query($qry, $tokenEmail);
+                $pageUrl = $helper->pageUrl('index.php') . "pwdupdate=true";
+                header("Location: $pageUrl");
+                exit;
+            }
+        }
     } else {
         $pageUrl = $helper->pageUrl('index.php');
         header("Location: $pageUrl");

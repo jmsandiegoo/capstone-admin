@@ -23,7 +23,7 @@
             <?php include $helper->subviewPath('navbar.php')?>
             <!-- Table View -->
             <div class="table-wrapper">
-                <table class="table">
+                <table class="table table-bordered">
                     <thead class="thead-dark">
                         <tr>
                         <th scope="col">Queue No.</th>
@@ -37,18 +37,6 @@
                         <th scope="row">1</th>
                         <td>Mark</td>
                         <td>Otto</td>
-                        <td>Skip or Call</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>Skip or Call</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
                         <td>Skip or Call</td>
                         </tr>
                     </tbody>

@@ -21,6 +21,11 @@
     border-bottom: 1px solid #dee0e4;
 }
 
+.login p {
+    color: #fff;
+    font-size: 0.8rem;
+}
+
 .login .form-group {
     height: 45px;
     display: flex;

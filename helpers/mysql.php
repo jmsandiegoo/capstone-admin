@@ -40,6 +40,7 @@ class Mysql_Driver
 		} else {
 			$stringTypes = "";
 			$type = "";
+
 			foreach($params as $param) {
 				if (is_string($param)) {
 					$type = "s";
@@ -60,7 +61,6 @@ class Mysql_Driver
 			} else {
 				return $result;
 			}
-			
 		}
 	}
 	
