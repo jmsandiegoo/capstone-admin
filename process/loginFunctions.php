@@ -1,7 +1,21 @@
 <?php
     session_start();
+
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception;
+
+    require __DIR__. '/../vendor/autoload.php';
     include_once __DIR__. '/../helpers/helper.php';
     include_once __DIR__. '/../helpers/mysql.php';
+
+    if (class_exists('PHPMailer')) {
+        echo "exists";
+    } else {
+        echo "not";
+    }
+    
+    $mail = new PHPMailer();
     $helper = new Helper();
     $db = new Mysql_Driver();
 
@@ -16,16 +30,13 @@
         $password = $_POST["password"];
         // check if email field
         if (empty($email) || empty($password)) {
-            $empty_error = "Please fill both <b> email and password </b> fields.";
-            $_SESSION["login_error"] = $empty_error;
             $_SESSION["email"] = $email;
             $_SESSION["password"] = $password;
-            $pageUrl = $helper->pageUrl('index.php');
+            $pageUrl = $helper->pageUrl('index.php') . "?error=empty";
             header("Location: $pageUrl");
             exit;
         } else {
             // check if account is valid
-
             $db->connect();
 
             $qry = "SELECT * FROM Account WHERE email = ?";
@@ -33,11 +44,8 @@
             $result = $db->query($qry, $email);
 
             $db->close();
-
-            if ($db->num_rows($result) <= 0) {
-                echo "No results";
-                $login_error = "Sorry, it seems that the <b> email and/or password is incorrect </b>. Please try again.";
-            } else { 
+            
+            if ($db->num_rows($result) > 0) { 
                 echo "Got results";
                 $row = $db->fetch_array($result);
                 $userId = $row["id"]; 
@@ -53,12 +61,10 @@
                     exit;
                 }
 
-                $login_error = "Sorry, it seems that the <b> email and/or password is incorrect </b>. Please try again.";
             }
-            $_SESSION["login_error"] = $login_error;
             $_SESSION["email"] = $email;
             $_SESSION["password"] = $password;
-            $pageUrl = $helper->pageUrl('index.php');
+            $pageUrl = $helper->pageUrl('index.php') . "?error=incorrect";
             header("Location: $pageUrl");
             exit;
         }
@@ -69,7 +75,8 @@
         $token = random_bytes(32);
 
         $url = $helper->pageUrl('createNewPassword.php'). "?selector=" . $selector . "&validator=" . bin2hex($token);
-
+        echo "</br>$url";
+        
         // Set expiry for tokens
         $expires = date("U") + 1800;
 
@@ -87,21 +94,27 @@
         $db->close();
 
         // Prepare email
-
-        $to = $userEmail;
-        $subject = 'Reset your password for NP ICT Open House Admin Panel';
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = '465';
+        $mail->isHTML();
+        $mail->Username = 'npictopenhousenoreply@gmail.com';
+        $mail->Password = 'Npict2019!';
+        $mail->SetFrom('noreply@npictopenhouse.com');
+        $mail->Subject('Reset your password for NP ICT Open House Admin Panel');
 
         $message = "<p><b>(This is auto-generated. Please do not reply to this email)</b></p>
-                    <p>We received a password reset request. The link to reset your password
-                    make this request, you can ignore this email</p>";
+        <p>We received a password reset request. The link to reset your password
+        make this request, you can ignore this email</p>";
         $message .= "<p> Here is your password reset link: </br>";
         $message .= '<a href="' . $url . '">' . $url . '</a></p>';
 
+        $mail->Body($message);
+        $mail->AddAddress($email);
 
-        $headers = "From: npict <npict@gmail.com>\r\n";
-        $headers = "Content-Type: text/html\r\n";
-
-        mail($to, $subject, $message, $headers);
+        $mail->Send();
 
         $pageUrl = $helper->pageUrl('forgotPassword.php') . "?reset=success";
         header("Location: $pageUrl");
@@ -132,6 +145,7 @@
         $result = $db->query($qry, $selector, $currentDate);
 
         if ($db->num_rows($result) <= 0) {
+            echo "You need to resubmit your reset request1";
             //  You need to resubmit your reset request
         }
 
@@ -141,6 +155,7 @@
 
             if (!$tokenCheck) {
                 // You need to resubmit your reset request
+                echo "You need to resubmit your reset request2";
             } else if ($tokenCheck) {
 
                 // Update the password
@@ -150,21 +165,25 @@
                 $qry = "SELECT * FROM Account WHERE email=?";
 
                 $accountResult = $db->query($qry, $tokenEmail);
-                
+
                 if ($db->num_rows($accountResult) <= 0) {
-                    // Something went wrong
+                    // You need to resubmit your reset request
+                    echo "You need to resubmit your reset request3";
 
+                } else {
+                    $qry = "UPDATE Account SET password=? WHERE email=?";
+                    $db->query($qry, password_hash($password, PASSWORD_DEFAULT), $tokenEmail);
+    
+                    // Delete tokens after use
+                    $qry = "DELETE FROM PwdReset WHERE reset_email=?";
+                    $db->query($qry, $tokenEmail);
+    
+                    $db->close();
+    
+                    $pageUrl = $helper->pageUrl('index.php') . "?pwdupdate=success";
+                    header("Location: $pageUrl");
+                    exit;
                 }
-
-                $qry = "UPDATE Account SET password=? WHERE email=?";
-                $db->query($qry, password_hash($password, PASSWORD_DEFAULT), $tokenEmail);
-
-                // Delete tokens after use
-                $qry = "DELETE FROM PwdReset WHERE reset_email=?";
-                $db->query($qry, $tokenEmail);
-                $pageUrl = $helper->pageUrl('index.php') . "pwdupdate=true";
-                header("Location: $pageUrl");
-                exit;
             }
         }
     } else {

@@ -10,18 +10,29 @@
     }
 
     $login_error = "";
+    $success_reset = "";
     $email = "";
     $password = "";
 
-    if (isset($_SESSION["login_error"])) {
-        $login_error = $_SESSION["login_error"];
+    if (isset($_GET["error"])) {
+        if ($_GET["error"] == "empty") {
+            $login_error = "Please fill both <b> email and password </b> fields.";
+        } else if ($_GET["error"] == "incorrect") {
+            $login_error = " Sorry, it seems that the <b> email and/or password is incorrect </b>. Please try again.";
+        }
+    }
+
+    if (isset($_GET["pwdupdate"])) {
+        if ($_GET["pwdupdate"] == "success") {
+            $success_reset = "Your password has been reset successfully!";
+        }
     }
 
     if (isset($_SESSION["email"]) && isset($_SESSION["password"])) {
         $email = $_SESSION["email"];
         $password = $_SESSION["password"];
     }
-    unset($_SESSION["login_error"]);
+
     unset($_SESSION["email"]);
     unset($_SESSION["password"]);
 ?>
@@ -44,6 +55,11 @@
                 <?php if($login_error): ?>
                     <div id="loginErrorMessage" class="alert alert-danger" role="alert">
                         <?php echo $login_error ?>
+                    </div>
+                <?php endif; ?>
+                <?php if($success_reset): ?>
+                    <div id="loginSuccessResetMessage" class="alert alert-success" role="alert">
+                        <?php echo $success_reset ?>
                     </div>
                 <?php endif; ?>
                 <button class="btn btn-login" type="submit">Log In</button>

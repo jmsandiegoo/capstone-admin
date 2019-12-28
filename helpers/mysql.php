@@ -32,11 +32,12 @@ class Mysql_Driver
 
     public function query($qry, ...$params)
 	{
+		$result = "";
+
 		$stmt = mysqli_stmt_init($this->connection);
 
 		if (!mysqli_stmt_prepare($stmt, $qry)) {
 			trigger_error("Failed to prepare Stmt Query");
-
 		} else {
 			$stringTypes = "";
 			$type = "";
@@ -49,18 +50,21 @@ class Mysql_Driver
 				} else if (is_double($param)) {
 					$type = "d";
 				}
+
 				$stringTypes .= $type;
 			}
 
 			mysqli_stmt_bind_param($stmt, $stringTypes , ...$params);
-			mysqli_stmt_execute($stmt);
-			$result = mysqli_stmt_get_result($stmt);
-
-			if (!$result) {
-				trigger_error("Query Failed SQL: $qry - Erorr: " . mysqli_error($this->connection));
-			} else {
-				return $result;
+			if (!mysqli_stmt_execute($stmt)) {
+				trigger_error("Query Failed SQL: $qry - Stmt Error: " . htmlspecialchars($stmt->error));
 			}
+
+			if (mysqli_stmt_affected_rows($stmt) > 0) {
+				$result = true;
+			} else {
+				$result = mysqli_stmt_get_result($stmt);
+			}
+			return $result;
 		}
 	}
 	

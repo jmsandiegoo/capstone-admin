@@ -26,7 +26,7 @@
             <?php if($validReq): ?>
 
                 <h1>Create New Password</h1>
-                <form action="process/loginFunctions.php" method="POST">
+                <form action="<?php echo $helper->processUrl('loginFunctions.php') ?>" method="POST">
                     <div class="form-group">
                         <label for="passwordField"><i class="fas fa-envelope"></i></label>
                         <input type="password" class="text-field" id="passwordField" placeholder="Enter new password" name="password" >
