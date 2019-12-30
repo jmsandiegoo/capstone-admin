@@ -7,6 +7,11 @@ Password: Npict2019!
 
 # First time Clone
 1. Make sure to install composer globally first
+
+```
+https://getcomposer.org/
+```
+
 2. run the command in the terminal within project directory:
 
 ```
