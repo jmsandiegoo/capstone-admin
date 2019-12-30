@@ -2,7 +2,7 @@
 
 Gmail Details of the bot:
 
-Username: npictopenhousenoreply@gmail.com
+Username: npictopenhousenoreply@gmail.com </br>
 Password: Npict2019!
 
 # First time Clone
@@ -12,7 +12,7 @@ Password: Npict2019!
 https://getcomposer.org/
 ```
 
-2. run the command in the terminal within project directory:
+2. Run the command in the terminal within project directory:
 
 ```
 composer install
