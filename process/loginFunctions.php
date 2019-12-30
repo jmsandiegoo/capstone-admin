@@ -9,13 +9,8 @@
     include_once __DIR__. '/../helpers/helper.php';
     include_once __DIR__. '/../helpers/mysql.php';
 
-    if (class_exists('PHPMailer')) {
-        echo "exists";
-    } else {
-        echo "not";
-    }
-    
-    $mail = new PHPMailer();
+    $mail = new PHPMailer(true);
+
     $helper = new Helper();
     $db = new Mysql_Driver();
 
@@ -76,7 +71,7 @@
 
         $url = $helper->pageUrl('createNewPassword.php'). "?selector=" . $selector . "&validator=" . bin2hex($token);
         echo "</br>$url";
-        
+
         // Set expiry for tokens
         $expires = date("U") + 1800;
 
@@ -93,6 +88,7 @@
 
         $db->close();
 
+        try {
         // Prepare email
         $mail->isSMTP();
         $mail->SMTPAuth = true;
@@ -103,7 +99,7 @@
         $mail->Username = 'npictopenhousenoreply@gmail.com';
         $mail->Password = 'Npict2019!';
         $mail->SetFrom('noreply@npictopenhouse.com');
-        $mail->Subject('Reset your password for NP ICT Open House Admin Panel');
+        $mail->Subject = 'Reset your password for NP ICT Open House Admin Panel';
 
         $message = "<p><b>(This is auto-generated. Please do not reply to this email)</b></p>
         <p>We received a password reset request. The link to reset your password
@@ -111,13 +107,18 @@
         $message .= "<p> Here is your password reset link: </br>";
         $message .= '<a href="' . $url . '">' . $url . '</a></p>';
 
-        $mail->Body($message);
+        $mail->Body = $message;
+
         $mail->AddAddress($email);
 
         $mail->Send();
-
+        
         $pageUrl = $helper->pageUrl('forgotPassword.php') . "?reset=success";
         header("Location: $pageUrl");
+        } catch (Exception $e) {
+        die($e->getMessage());
+
+        }
 
     } else if (isset($_POST["createNewPassword"])) {
 

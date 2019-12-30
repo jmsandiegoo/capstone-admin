@@ -11,12 +11,22 @@ class Mysql_Driver
      */ 
     public function connect()
     {
-        //connection parameters
-        $host = 'localhost';
+		//connection parameters
+
+		// Using MAMP Settings
+        $host = 'localhost:8889';
+        $user = 'root';
+        $password = 'root';
+		$database = 'ict_open_house'; 
+		
+		/*
+		// Using XAMPP Settings
+		$host = 'localhost';
         $user = 'root';
         $password = '';
-        $database = 'ict_open_house'; 
-    
+		$database = 'ict_open_house'; 
+		*/
+
         $this->connection = mysqli_connect($host, $user, $password, $database);
 		if (mysqli_connect_errno($this->connection))
   		{
@@ -38,6 +48,7 @@ class Mysql_Driver
 
 		if (!mysqli_stmt_prepare($stmt, $qry)) {
 			trigger_error("Failed to prepare Stmt Query");
+			
 		} else {
 			$stringTypes = "";
 			$type = "";
@@ -53,8 +64,10 @@ class Mysql_Driver
 
 				$stringTypes .= $type;
 			}
+			if (sizeof($params)) {
+				mysqli_stmt_bind_param($stmt, $stringTypes , ...$params);
+			}
 
-			mysqli_stmt_bind_param($stmt, $stringTypes , ...$params);
 			if (!mysqli_stmt_execute($stmt)) {
 				trigger_error("Query Failed SQL: $qry - Stmt Error: " . htmlspecialchars($stmt->error));
 			}

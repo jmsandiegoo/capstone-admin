@@ -1,4 +1,16 @@
 <?php
+    include_once __DIR__.'/../../helpers/mysql.php';
+    // Get the courses
+    $db = new Mysql_Driver();
+
+    $db->connect();
+
+    $qry = "SELECT * FROM Course";
+
+    $result = $db->query($qry);
+
+    $db->close();
+
 ?>
 
 <div class="wrapper">
@@ -14,14 +26,13 @@
                 <a href="#appointmentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Appointments</a>
                 <ul class="collapse list-unstyled" id="appointmentSubmenu">
                     <li>
-                        <a href="#">General</a>
+                        <a href="<?php echo $helper->pageUrl('appointment.php') ?>">General</a>
                     </li>
-                    <li>
-                        <a href="#">Course 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Course 2</a>
-                    </li>
+                    <?php while($row = $db->fetch_array($result)): ?>
+                        <li>
+                            <a href="<?php echo $helper->pageUrl('appointment.php') . '?course_id=' . $row['course_id']?>"><?php echo $row['course_name'] ?></a>
+                        </li>
+                    <?php endwhile; ?>
                 </ul>
             </li>
         </ul>
