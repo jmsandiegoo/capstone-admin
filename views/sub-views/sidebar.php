@@ -1,13 +1,13 @@
 <?php
-    include_once __DIR__.'/../../helpers/mysql.php';
-    // Get the courses
-    $db = new Mysql_Driver();
+    // include_once __DIR__.'/../../helpers/mysql.php';
+    // // Get the courses
+    // $db = new Mysql_Driver();
 
     $db->connect();
 
     $qry = "SELECT * FROM Course";
 
-    $result = $db->query($qry);
+    $courseResult = $db->query($qry);
 
     $db->close();
 
@@ -28,7 +28,7 @@
                     <li>
                         <a href="<?php echo $helper->pageUrl('appointment.php') ?>">General</a>
                     </li>
-                    <?php while($row = $db->fetch_array($result)): ?>
+                    <?php while($row = $db->fetch_array($courseResult)): ?>
                         <li>
                             <a href="<?php echo $helper->pageUrl('appointment.php') . '?course_id=' . $row['course_id']?>"><?php echo $row['course_name'] ?></a>
                         </li>

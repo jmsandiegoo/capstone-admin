@@ -79,6 +79,7 @@ class Mysql_Driver
 			}
 			return $result;
 		}
+		xdebug_enable();
 	}
 	
 	public function num_rows($result)
