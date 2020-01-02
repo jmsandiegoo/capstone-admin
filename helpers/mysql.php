@@ -47,7 +47,7 @@ class Mysql_Driver
 		$stmt = mysqli_stmt_init($this->connection);
 
 		if (!mysqli_stmt_prepare($stmt, $qry)) {
-			trigger_error("Failed to prepare Stmt Query");
+			trigger_error("Failed to prepare Stmt Query" . $stmt->error);
 			
 		} else {
 			$stringTypes = "";

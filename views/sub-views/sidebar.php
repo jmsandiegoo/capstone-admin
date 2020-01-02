@@ -30,7 +30,7 @@
                     </li>
                     <?php while($row = $db->fetch_array($courseResult)): ?>
                         <li>
-                            <a href="<?php echo $helper->pageUrl('appointment.php') . '?course_id=' . $row['course_id']?>"><?php echo $row['course_name'] ?></a>
+                            <a href="<?php echo $helper->pageUrl('appointment.php') . '?course_id=' . $row['id']?>"><?php echo $row['course_name'] ?></a>
                         </li>
                     <?php endwhile; ?>
                 </ul>

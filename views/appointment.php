@@ -21,29 +21,44 @@
     $appointmentWaitingResult = null;
     $appointmentServingResult = null;
 
+    $appointmentName = "General";
+
     if ($course_id) {
+        // Get the appointment records status pending
         $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
                 WHERE course_id = ? AND appointment_status = 'Pending' 
                 ORDER BY waiting_time DESC";
 
         $appointmentWaitingResult = $db->query($qry, $course_id);
 
-        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
+        // Get the appointment records status now serving
+        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_lastcalled, NOW()) AS 'last_called' FROM Appointment 
         WHERE course_id = ? AND appointment_status = 'Now Serving' 
-        ORDER BY waiting_time DESC";
+        ORDER BY last_called ASC";
 
         $appointmentServingResult = $db->query($qry, $course_id);
 
+        // Get the appointment name
+        $qry = "SELECT * FROM Course WHERE course_id = ?";
+
+        $courseResult = $db->query($qry, $course_id);
+
+        $row = $db->fetch_array($courseResult);
+
+        $appointmentName = $row["course_name"];
+
     } else {
-        $qry = "SELECT *, TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
+        // Get the appointment records status pending
+        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
                 WHERE course_id IS NULL AND appointment_status = 'Pending' 
                 ORDER BY waiting_time DESC";
 
         $appointmentWaitingResult = $db->query($qry);
 
-        $qry = "SELECT *, TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
+        // Get the appointment records status now serving
+        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_lastcalled, NOW()) AS 'last_called' FROM Appointment 
         WHERE course_id IS NULL AND appointment_status = 'Now Serving' 
-        ORDER BY waiting_time DESC";
+        ORDER BY last_called ASC";
 
         $appointmentServingResult = $db->query($qry);
     }
@@ -62,7 +77,7 @@
             <?php include $helper->subviewPath('navbar.php')?>
             <!-- Table View -->
             <div class="table-wrapper">
-                <h2>General</h2>
+                <h2><?php echo $appointmentName ?></h2>
                 <hr>
                 <h3>Waiting</h3>
                 <table class="table table-bordered">
@@ -80,9 +95,24 @@
                         <th scope="row"><?php echo $row['appointment_id'] ?></th>
                         <td><?php echo $row['appointment_name'] ?></td>
                         <td>
-                            <?php echo $row['waiting_time'] ?>
+                            <?php echo $helper->secondsToTime($row['waiting_time']) ?>
                         </td>
-                        <td>Skip or Call</td>
+                        <td class="action-cell">
+                            <form action="<?php echo $helper->processUrl('appointmentFunctions.php') ?>" method="POST">
+                                <input type="hidden" name="appointment_id" value="<?php echo $row['appointment_id'] ?>" />
+                                <?php if($course_id): ?>
+                                    <input type="hidden" name="course_id" value="<?php echo $course_id ?>" />
+                                <?php endif; ?>
+                                <button type="submit" class="btn btn-dark" name="call-submit">Call</button>
+                            </form>
+                            <form action="<?php echo $helper->processUrl('appointmentFunctions.php') ?>" method="POST">
+                                <input type="hidden" name="appointment_id" value="<?php echo $row['appointment_id'] ?>" />
+                                <?php if($course_id): ?>
+                                    <input type="hidden" name="course_id" value="<?php echo $course_id ?>" />
+                                <?php endif; ?>
+                                <button type="submit" class="btn btn-light" name="end-submit">Skip</button>
+                            </form>
+                        </td>
                         </tr>
                     <?php endwhile; ?>
                     <?php if (!$db->num_rows($appointmentWaitingResult) > 0): ?>
@@ -100,7 +130,7 @@
                         <tr>
                         <th scope="col">Queue No.</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Waiting Time</th>
+                        <th scope="col">Last Called</th>
                         <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -110,9 +140,24 @@
                         <th scope="row"><?php echo $row['appointment_id'] ?></th>
                         <td><?php echo $row['appointment_name'] ?></td>
                         <td>
-                            <?php echo $row['waiting_time'] ?>
+                            <?php echo $helper->secondsToTime($row['last_called']) ?>
                         </td>
-                        <td>Skip or Call</td>
+                        <td class="action-cell">
+                            <form action="<?php echo $helper->processUrl('appointmentFunctions.php') ?>" method="POST">
+                                <input type="hidden" name="appointment_id" value="<?php echo $row['appointment_id'] ?>" />
+                                <?php if($course_id): ?>
+                                    <input type="hidden" name="course_id" value="<?php echo $course_id ?>" />
+                                <?php endif; ?>
+                                <button type="submit" class="btn btn-dark" name="end-submit">End</button>
+                            </form>
+                            <form action="<?php echo $helper->processUrl('appointmentFunctions.php') ?>" method="POST">
+                                <input type="hidden" name="appointment_id" value="<?php echo $row['appointment_id'] ?>" />
+                                <?php if($course_id): ?>
+                                    <input type="hidden" name="course_id" value="<?php echo $course_id ?>" />
+                                <?php endif; ?>
+                                <button type="submit" class="btn btn-light" name="recall-submit">Re-Call</button>
+                            </form>
+                        </td>
                         </tr>
                     <?php endwhile; ?>
                     <?php if (!$db->num_rows($appointmentServingResult) > 0): ?>
