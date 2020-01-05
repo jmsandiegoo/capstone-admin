@@ -24,19 +24,6 @@
     $appointmentName = "General";
 
     if ($course_id) {
-        // Get the appointment records status pending
-        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
-                WHERE course_id = ? AND appointment_status = 'Pending' 
-                ORDER BY waiting_time DESC";
-
-        $appointmentWaitingResult = $db->query($qry, $course_id);
-
-        // Get the appointment records status now serving
-        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_lastcalled, NOW()) AS 'last_called' FROM Appointment 
-        WHERE course_id = ? AND appointment_status = 'Now Serving' 
-        ORDER BY last_called ASC";
-
-        $appointmentServingResult = $db->query($qry, $course_id);
 
         // Get the appointment name
         $qry = "SELECT * FROM Course WHERE course_id = ?";
@@ -46,21 +33,6 @@
         $row = $db->fetch_array($courseResult);
 
         $appointmentName = $row["course_name"];
-
-    } else {
-        // Get the appointment records status pending
-        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
-                WHERE course_id IS NULL AND appointment_status = 'Pending' 
-                ORDER BY waiting_time DESC";
-
-        $appointmentWaitingResult = $db->query($qry);
-
-        // Get the appointment records status now serving
-        $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_lastcalled, NOW()) AS 'last_called' FROM Appointment 
-        WHERE course_id IS NULL AND appointment_status = 'Now Serving' 
-        ORDER BY last_called ASC";
-
-        $appointmentServingResult = $db->query($qry);
     }
 
     $db->close();
@@ -90,8 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php while($row = $db->fetch_array($appointmentWaitingResult)): ?>
-                        <tr>
+                        <!-- <tr>
                         <th scope="row"><?php echo $row['appointment_id'] ?></th>
                         <td><?php echo $row['appointment_name'] ?></td>
                         <td>
@@ -113,13 +84,10 @@
                                 <button type="submit" class="btn btn-light" name="end-submit">Skip</button>
                             </form>
                         </td>
-                        </tr>
-                    <?php endwhile; ?>
-                    <?php if (!$db->num_rows($appointmentWaitingResult) > 0): ?>
+                        </tr> -->
                         <tr>
                         <td colspan="100%" class="text-center">There are no pending appointments currently.</td>
                         </tr>
-                    <?php endif; ?>
                     </tbody>
                     
                 </table>
@@ -135,8 +103,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php while($row = $db->fetch_array($appointmentServingResult)): ?>
-                        <tr>
+                        <!-- <tr>
                         <th scope="row"><?php echo $row['appointment_id'] ?></th>
                         <td><?php echo $row['appointment_name'] ?></td>
                         <td>
@@ -158,18 +125,17 @@
                                 <button type="submit" class="btn btn-light" name="recall-submit">Re-Call</button>
                             </form>
                         </td>
-                        </tr>
-                    <?php endwhile; ?>
-                    <?php if (!$db->num_rows($appointmentServingResult) > 0): ?>
+                        </tr> -->
                         <tr>
                         <td colspan="100%" class="text-center">There are no appointments being served currently.</td>
                         </tr>
-                    <?php endif; ?>
                     </tbody>
                     
                 </table>
             </div>
         </section>
     </main>
+
+    <script src="<?php echo $helper->jsPath('appointment.js') ?>"></script>
     <?php include $helper->subviewPath('footer.php') ?>
 </html>
