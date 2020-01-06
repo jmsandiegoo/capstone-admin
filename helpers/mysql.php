@@ -13,19 +13,15 @@ class Mysql_Driver
     {
 		//connection parameters
 
-		// Using MAMP Settings
-        $host = 'localhost:8889';
-        $user = 'root';
-        $password = 'root';
-		$database = 'ict_open_house'; 
+	
 		
-		/*
+		
 		// Using XAMPP Settings
 		$host = 'localhost';
         $user = 'root';
         $password = '';
 		$database = 'ict_open_house'; 
-		*/
+		
 
         $this->connection = mysqli_connect($host, $user, $password, $database);
 		if (mysqli_connect_errno($this->connection))
