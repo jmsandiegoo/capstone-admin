@@ -47,6 +47,7 @@ p.navbar-brand {
     min-width: 250px;
     max-width: 250px;
     min-height: 100vh;
+    height: 100%;
     background: #7386D5;
     color: #fff;
 }
