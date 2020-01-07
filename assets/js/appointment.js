@@ -89,8 +89,14 @@ function populateNowServingTable(response) {
         var appointment = response[i];
         var tr = document.createElement('tr');
         tr.innerHTML = `<th scope="row"> ${appointment.appointment_id} </th>` + 
-                        `<td>${appointment.appointment_name}</td>` +
-                        `<td>${appointment.last_called} </br> (Called: ${appointment.appointment_calls} times)</td>` + 
+                        `<td>${appointment.appointment_name}</td>`;
+
+        if (appointment.course_abbreviations) {
+            tr.innerHTML += `<td>${appointment.course_abbreviations}</td>` ;
+        } else {
+            tr.innerHTML += `<td>General</td>` ;
+        }
+        tr.innerHTML += `<td>${appointment.last_called} seconds </br> (Called: ${appointment.appointment_calls} times)</td>` + 
                         `<td><form action="../process/appointmentFunctions.php" method="POST">` +
                         `<input type="hidden" name="appointment_id" value="${appointment.appointment_id}" />` +
                         `<button type="submit" class="btn btn-dark" name="end-submit">End</button>` +

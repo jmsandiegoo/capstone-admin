@@ -61,7 +61,8 @@
             $appointmentServingResult = null;
 
             // Get the appointment records status now serving
-            $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_lastcalled, NOW()) AS 'last_called' FROM Appointment 
+            $qry = "SELECT a.* , TIMESTAMPDIFF(SECOND, a.appointment_lastcalled, NOW()) AS 'last_called', c.course_abbreviations  
+            FROM Appointment a LEFT OUTER JOIN Course c ON a.course_id = c.id 
             WHERE appointment_status = 'Now Serving' 
             ORDER BY last_called ASC";
 

@@ -13,14 +13,19 @@ class Mysql_Driver
     {
 		//connection parameters
 
-	
+		// Using MAMP Settings
+		$host = 'localhost:8889';
+		$user = 'root';
+		$password = 'root';
+		$database = 'ict_open_house';
 		
-		
+		/*
 		// Using XAMPP Settings
 		$host = 'localhost';
         $user = 'root';
         $password = '';
 		$database = 'ict_open_house'; 
+		*/
 		
 
         $this->connection = mysqli_connect($host, $user, $password, $database);
@@ -75,7 +80,6 @@ class Mysql_Driver
 			}
 			return $result;
 		}
-		xdebug_enable();
 	}
 	
 	public function num_rows($result)

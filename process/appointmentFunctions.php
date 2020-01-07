@@ -12,7 +12,7 @@
 
         $db->connect();
 
-        $qry = "UPDATE Appointment SET appointment_status = 'Now Serving', appointment_lastcalled = NOW()  
+        $qry = "UPDATE Appointment SET appointment_status = 'Now Serving', appointment_lastcalled = NOW(), appointment_calls = appointment_calls + 1   
                 WHERE appointment_id = ? AND appointment_status = 'Pending'";
         
         $result = $db->query($qry, $appointment_id);
@@ -68,7 +68,7 @@
 
         $db->connect();
 
-        $qry = "UPDATE Appointment SET appointment_lastcalled = NOW()  
+        $qry = "UPDATE Appointment SET appointment_lastcalled = NOW(), appointment_calls = appointment_calls + 1  
                 WHERE appointment_id = ? AND appointment_status = 'Now Serving'";
         
         $result = $db->query($qry, $appointment_id);
