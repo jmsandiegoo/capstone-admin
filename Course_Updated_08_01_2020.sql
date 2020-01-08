@@ -209,8 +209,6 @@ CREATE TABLE Appointment
   appointment_name VARCHAR(100) NOT NULL,
   appointment_status ENUM('Pending', 'Now Serving', 'Finished', 'Skipped') DEFAULT 'Pending' NOT NULL,
   appointment_createdate DATETIME NOT NULL,
-  appointment_lastcalled DATETIME DEFAULT NULL,
-  appointment_calls INT(4) DEFAULT 0 NOT NULL,
   course_id INT(4) DEFAULT NULL,
   phoneNumber varchar(20) DEFAULT NULL COMMENT 'User phone number',
   CONSTRAINT pk_appointment PRIMARY KEY (appointment_id),
@@ -563,29 +561,25 @@ INSERT INTO Job1(job1_id, job1_name) VALUES
 /*--IT--*/
 (1,'Application Developer'),(2,'Software Architect'),(3,'Front End Developer'),
 
-(4,'Pre-/Post-Sales Consultant'),(5,'Customer Experience Manager'),(6,'Enterprise Sales Leader'),(7,'IT Project Manager'),
+(4,'Customer Support Administrator'),(5,'Desktop Support Manager'),(6,'Help Desk Specialist'),
 
-(8,'Cloud Engineer'),(9,'Cloud Services Developer'),(10,'Cloud Software & Network Engineer'),(11,'Cloud System Administrator'),
+(7,'Cloud Engineer'),(8,'Cloud Services Developer'),(9,'Cloud Software & Network Engineer'),(10,'Cloud System Administrator'),
 
-(12,'Cyber Security Specialist'),(13,'IT Security Consultant'),(14,'IT Security Officer'),
+(11,'Cyber Security Specialist'),(12,'IT Security Consultant'),(13,'IT Security Officer'),
 
 /*--IM--*/
-(15,'Game Designer'),(16,'Game Interface Designer'),
+(14, 'Interaction Designer'), (15, 'UX Designer'), (16,'Usability Analyst'), (17,'Visual Designer'), (18,'Information Architect'), (19,'User Research'),
 
-(17, 'UI/UX Designer'), (18,'Visual Designer'),(19,'Web Designer'),(20,'Multimedia Designer'),
+(20,'Game Designer'),(21,'Game Interface Designer'), (22,'Game Animator'),(23,'Game Audio Engineer'),
 
-(21,'3D Artist'),(22,'Interactive 3D/VR Artists'),(23,'Cartoonist'),
+(24,'3D Artist'),(25,'Interactive 3D/VR Artists'),(26,'Cartoonist'),
 
-(24,'Producer'),(25,'Level Designer'),(26,'Junior Programmer'),
-
-(27,'React JS Front End Developer'),
+(27,'Producer'),(28,'Level Designer'),(29,'Junior Programmer'),
 
 /*--FI--*/
-(28,'Accounting'), (29, 'Banking Operations'), (30,'Financial Consultant'),
+(30,'Accountant Technician'), (31, 'Brand Consultant'), (32,'Bank Manager'),
 
-(31,'Data Scientist'), (32, 'Data Analyst'), (33, 'Data Engineer'),
-
-(34,'IT Consulting Analyst'), (35,'System Analyst'),
+(33,'Data Architect '), (34, 'Business Intelligence'), (35, 'Application Architect'),
 
 (36,'Customer Due Diligence Manager'), (37,'Customer Service Order Manager'),
 
@@ -593,98 +587,95 @@ INSERT INTO Job1(job1_id, job1_name) VALUES
 
 /*--CSF--*/
 
-(41,'IT Security Product Companies'), (42,'Security Operations Analyst'), (43,'Security Engineer'),
+(41,'Security Architect'), (42,'Security Engineer'), (43,'Security Manager'), (44,'Security Consultant'),
 
-(44,'Security Software Development Companies'), (45,'Security Software Engineer'),
+(45,'Security Software Developer'), (46,'Security Software Engineer'),
 
-(46,'Cyber Risk Analyst'), (47,'Incident Response Programme Management Specialist'), (48,'Risk Control Specialist'), (49, 'Risk Consulting'), 
+(47, 'Security Penetration Tester'), (48, 'Cybersecurity Penetration Test Specialist'), (49, 'Web Application Security Tester'), 
 
-(50, 'Security Penetration Tester'), (51, 'Cybersecurity Penetration Test Specialist'), (52, 'Web Application Security Tester'), 
+(50,'Cyber Risk Analyst'), (51,'Incident Response Programme Management Specialist'), (52,'Risk Control Specialist'), (53, 'Risk Consultant'), 
 
-(53,'Incident/Forensic/Threat Investigator'), (54, 'Cyber Forensic Analyst'), (55, 'Private Investigators'), (56, 'Corporate IT Security Personal'), (57,'Law Enforcement');
+(54,'Incident/Forensic/Threat Investigator'), (55, 'Cyber Forensic Analyst'), (56, 'Private Investigators'), (57, 'Corporate IT Security Personal'), (58,'Law Enforcer');
 
 /*------ Category -------*/
 INSERT INTO Category(category_id, category_name, categoryitem_path, categoryitem_type) VALUES
 /*--IT--*/
 (1, 'Coding', 'assets/img/category/coding.png', 'Image'), 
-(2, 'Enterprise', 'assets/img/category/enterprise.png', 'Image'), 
+(2, 'Computer Support', 'assets/img/category/support.png', 'Image'), 
 (3, 'Cloud Computing Engineers', 'assets/img/category/cloud.png', 'Image'), 
 (4, 'Information Security Specialist', 'assets/img/category/security.png', 'Image'), 
 
 /*--IM--*/
-(5, 'Game Designer', 'assets/img/category/gamedesigner.png', 'Image'), 
-(6, 'Interactive Media Design', 'assets/img/category/interactivemedia.png', 'Image'), 
+(5, 'UX', 'assets/img/category/interactivemedia.png', 'Image'), 
+(6, 'Game Designer', 'assets/img/category/gamedesigner.png', 'Image'), 
 (7, '3D/Sketch', 'assets/img/category/3d.png', 'Image'), 
 (8, 'Digital', 'assets/img/category/digital.png', 'Image'),
 
 /*--FI--*/
 (9, 'Banking & Finance', 'assets/img/category/banking.png', 'Image'), 
-(10, 'Data', 'assets/img/category/data.png', 'Image'),
-(11, 'Analytics', 'assets/img/category/analysis.png', 'Image'), 
-(12, 'Customer', 'assets/img/category/customer.png', 'Image'), 
+(10, 'Data Science', 'assets/img/category/data.png', 'Image'),
+(11, 'Customer Service', 'assets/img/category/customer.png', 'Image'), 
+(12, 'Enterprise Computing','assets/img/category/enterprise.png', 'Image'),
 
 /*--CSF--*/
-(13, 'Infrastructure Security [Network/Server]', 'assets/img/category/Infrastructure.png', 'Image'), 
+(13, 'Security Analyst [Network/Server]', 'assets/img/category/Infrastructure.png', 'Image'), 
 (14, 'Software Security', 'assets/img/category/softwaresecurity.png', 'Image'), 
-(15, 'Risk Management', 'assets/img/category/risk.png', 'Image'), 
-(16, 'QA Testing', 'assets/img/category/qa.png', 'Image'), 
-(17,'Forensics', 'assets/img/category/forensic.png', 'Image');
+(15, 'Penetration  Tester', 'assets/img/category/qa.png', 'Image'), 
+(16, 'Security Risk Management', 'assets/img/category/risk.png', 'Image'), 
+(17, 'Forensics', 'assets/img/category/forensic.png', 'Image');
 
 /*--CategoryJob--*/
 INSERT INTO CategoryJob(categoryjob_id, category_id, job1_id, id) VALUES
 /*--Coding--*/
 (1, 1, 1, 1), (2, 1, 2, 1), (3, 1, 3, 1),
 
-/*--Enterprise--*/
-(7, 2, 4, 1), (8, 2, 5, 1), (9, 2, 6, 1), (10, 2, 7, 1),
+/*--Customer Support--*/
+(4, 2, 4, 1), (5, 2, 5, 1), (6, 2, 6, 1), 
 
 /*--Cloud Computing Engineers--*/
-(14, 3, 8, 1), (15, 3, 9, 1), (16, 3, 10, 1), (17, 3, 11, 1), 
+(7, 3, 7, 1), (8, 3, 8, 1), (9, 3, 9, 1), (10, 3, 10, 1), 
 
 /*--Information Security Specialist--*/
-(18, 4, 12, 1), (19, 4, 13, 1), (20, 4, 14, 1), 
+(11, 4, 11, 1), (12, 4, 12, 1), (13, 4, 13, 1), 
+
+/*--UX--*/
+(14, 5, 14, 3), (15, 5, 15, 3), (16, 5, 16, 3), (17, 5, 17, 3), (18, 5, 18, 3), (19, 5, 19, 3),
 
 /*--Game Designer--*/
-(21, 5, 15, 3), (22, 5, 16, 3), 
-
-/*--Interactive Media Design--*/
-(23, 6, 17, 3), (24, 6, 18, 3), (25, 6, 19, 3), (26, 6, 20, 3), 
+(20, 6, 20, 3), (21, 6, 21, 3), (22, 6, 22, 3), (23, 6, 23, 3),
 
 /*--3D/Sketch--*/
-(27, 7, 21, 3), (28, 7, 22, 3), (29, 7, 23, 3),
+(24, 7, 24, 3), (25, 7, 25, 3), (26, 7, 26, 3),
 
 /*--'Digital'--*/
-(30, 8, 24, 3), (31, 8, 25, 3), (32, 8, 26, 3), 
+(27, 8, 27, 3), (28, 8, 28, 3), (29, 8, 29, 3), 
 
 /*--Banking & Finance--*/
-(33, 9, 28, 2), (34, 9, 29, 2), (35, 9, 30, 2), 
+(30, 9, 30, 2), (31, 9, 31, 2), (32, 9, 32, 2), 
 
-/*--Data--*/
-(36, 10, 31, 2), (37, 10, 32, 2), (38, 10, 33, 2),
+/*--Data Science--*/
+(33, 10, 33, 2), (34, 10, 34, 2), (35, 10, 35, 2),
 
-/*--Analytics--*/
-(39, 11, 34, 2), (40, 11, 35, 2), 
-
-/*--Customer--*/
-(41, 12, 36, 2), (42, 12, 37, 2), 
+/*--Customer Service--*/
+(36, 11, 36, 2), (37, 11, 37, 2), 
 
 /*--Enterprise--*/
-(43, 2, 38, 2), (44, 2, 39, 2), (45, 2, 40, 2), 
+(38, 12, 38, 2), (39, 12, 39, 2), (40, 12, 40, 2), 
 
-/*--Infrastructure Security [Network/Server]--*/
-(46, 13, 41, 4), (47, 13, 42, 4), (48, 13, 43, 4),
+/*--Security Analyst [Network/Server] --*/
+(41, 13, 41, 4), (42, 13, 42, 4), (43, 13, 43, 4),
 
 /*--Software Security--*/
-(49, 14, 44, 4), (50, 14, 12, 4), (51, 14, 45, 4), 
+(44, 14, 44, 4), (45, 14, 45, 4), (46, 14, 46, 4), 
 
-/*--Risk Management--*/
-(52, 15, 46, 4), (53, 15, 47, 4), (54, 15, 48, 4), (55, 15, 49, 4), 
+/*--Penetration Tester--*/
+(47, 15, 47, 4), (48, 15, 48, 4), (49, 15, 49, 4),
 
-/*--QA Testing--*/
-(56, 16, 50, 4), (57, 16, 51, 4), (58, 16, 52, 4),
+/*--Security Risk Management--*/
+(50, 16, 50, 4), (51, 16, 51, 4), (52, 16, 52, 4), (53, 16, 53, 4), 
 
 /*--Forensics--*/
-(59, 17, 53, 4), (60, 17, 54, 4), (61, 17, 55, 4), (62, 17, 56, 4), (63, 17, 57, 4);
+(54, 17, 54, 4), (55, 17, 55, 4), (56, 17, 56, 4), (57, 17, 57, 4), (58, 17, 58, 4);
 
 /*------ CourseJob -------*/
 INSERT INTO CourseJob(id, job_id) VALUES
@@ -880,13 +871,7 @@ INSERT INTO Item(item_id, item_path, item_type, course_id) VALUES
 (9, 'assets/img/IM/BG_Card.png', 'Image', '3'),
 (10, 'assets/img/CDF/BG_Card.png', 'Image', '4');
 
-/*------ Appointment ---------*/
-INSERT INTO Appointment
-(appointment_id, is_general, appointment_name, appointment_status, appointment_createdate, course_id) VALUES 
-(NULL, '1', 'John Michael San Diego', 'Pending', DATE_SUB(NOW(), INTERVAL 2 HOUR), NULL),
-(NULL, '1', 'Mary Duetch', 'Pending', DATE_SUB(NOW(), INTERVAL 1 HOUR), NULL),
-(NULL, '1', 'Martin Johnson', 'Pending', NOW(), NULL),
-(NULL, '1', 'Rick Morty', 'Pending', NOW(), 1);
+
 
 /*------ Item (Modules) -------*/
 INSERT INTO Item(item_id, item_path, item_type, module_id) VALUES
