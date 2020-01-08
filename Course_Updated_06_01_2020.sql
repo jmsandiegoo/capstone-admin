@@ -207,7 +207,7 @@ CREATE TABLE Appointment
   chat_id bigint NULL DEFAULT NULL COMMENT 'Unique user or chat identifier',
   is_general TINYINT(1) NOT NULL,
   appointment_name VARCHAR(100) NOT NULL,
-  appointment_status ENUM('Pending', 'Now Serving', 'Finished') DEFAULT 'Pending' NOT NULL,
+  appointment_status ENUM('Pending', 'Now Serving', 'Finished', 'Skipped') DEFAULT 'Pending' NOT NULL,
   appointment_createdate DATETIME NOT NULL,
   appointment_lastcalled DATETIME DEFAULT NULL,
   appointment_calls INT(4) DEFAULT 0 NOT NULL,
