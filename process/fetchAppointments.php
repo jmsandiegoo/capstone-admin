@@ -64,7 +64,7 @@
             $qry = "SELECT a.* , TIMESTAMPDIFF(SECOND, a.appointment_lastcalled, NOW()) AS 'last_called', c.course_abbreviations  
             FROM Appointment a LEFT OUTER JOIN Course c ON a.course_id = c.id 
             WHERE appointment_status = 'Now Serving' 
-            ORDER BY last_called ASC";
+            ORDER BY c.course_abbreviations DESC, last_called ASC";
 
             $appointmentServingResult = $db->query($qry);
 

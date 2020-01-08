@@ -70,7 +70,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Course</th>
                         <th scope="col">Last Called</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col">Actions</th> 
                         </tr>
                     </thead>
                     <tbody>

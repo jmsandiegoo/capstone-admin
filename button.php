@@ -21,7 +21,7 @@
             //$telegram->enableMySql($mysql_credentials);
             $text    = 'kukubird';
             //get correct chat_id
-            $chat_id = '282746527';
+            $chat_id = '450285215';
             $data = [
                 'chat_id' => $chat_id,
                 'text'    => $text,
