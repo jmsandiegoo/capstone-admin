@@ -268,7 +268,7 @@ class createApptCommand extends UserCommand
                     {
                         $qno = $obj->appointment_id;
                     }
-                    $queue_text .= "Queue Number:   " . $qno;
+                    $queue_text = "Queue Number: " . $qno;
                     $data['text']      = $queue_text. PHP_EOL .$out_text;
 
                     $result = Request::sendMessage($data);
