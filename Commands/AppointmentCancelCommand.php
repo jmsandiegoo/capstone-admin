@@ -162,12 +162,12 @@ class cancelApptCommand extends UserCommand
                     $this->conversation->update();
                     //$out_text = '/CreateAppt result:' . PHP_EOL;
                     unset($notes['state']);
-                    if ($notes['choice'] = 'Yes'){
+                    if ($notes['choice'] == "Yes"){
                         //Cancel
                         $this->cancel_queue($user_id);
                         $data['text']      = "Your queue has been cancelled.";
                     }
-                    else if ($notes['choice'] = 'No'){
+                    else if ($notes['choice'] == "No"){
                         //Send stop trolling message
                         $data['text']      = "Stop trolling la nabei";
                     }
