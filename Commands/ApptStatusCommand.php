@@ -20,17 +20,17 @@ class ApptStatusCommand extends UserCommand
     /**
      * @var string
      */
-    protected $name = 'apptStatus';
+    protected $name = 'checkAppt';
 
     /**
      * @var string
      */
-    protected $description = 'Check queue';
+    protected $description = 'Check queue status';
 
     /**
      * @var string
      */
-    protected $usage = '/apptStatus';
+    protected $usage = '/checkAppt';
 
     /**
      * @var string

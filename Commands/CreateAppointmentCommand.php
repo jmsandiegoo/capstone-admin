@@ -46,7 +46,7 @@ class createApptCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '0.3.0';
+    protected $version = '1.3.0';
 
     /**
      * @var bool
