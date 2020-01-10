@@ -26,16 +26,16 @@ $commands_paths = [
   __DIR__ . '/Commands/',
 ];
 
-// MAMP
+/*// MAMP
 // Enter your MySQL database credentials
 $mysql_credentials = [
     'host'     => 'localhost:8889',
     'user'     => 'root',
     'password' => 'root',
     'database' => 'ict_open_house',
-];
+];*/
 
-/*
+
 // XAMPP
 // Enter your MySQL database credentials
 $mysql_credentials = [
@@ -44,7 +44,7 @@ $mysql_credentials = [
     'password' => '',
     'database' => 'ict_open_house',
 ];
-*/
+
 
 
 try {

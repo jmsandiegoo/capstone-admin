@@ -208,7 +208,7 @@ CREATE TABLE Appointment
   is_general TINYINT(1) NOT NULL,
   appointment_name VARCHAR(100) NOT NULL,
   appointment_status ENUM('Pending', 'Now Serving', 'Finished', 'Cancelled') DEFAULT 'Pending' NOT NULL,
-  appointment_createdate DATETIME NOT NULL,
+  appointment_createdate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   appointment_lastcalled DATETIME DEFAULT NULL,
   appointment_calls INT(4) DEFAULT 0 NOT NULL,
   course_id INT(4) DEFAULT NULL,

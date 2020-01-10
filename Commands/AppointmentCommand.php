@@ -27,6 +27,11 @@ class AppointmentCommand extends UserCommand
     protected $description = 'Enter Appointment System';
 
     /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+    
+    /**
      * @var string
      */
     protected $usage = '/appointment';
