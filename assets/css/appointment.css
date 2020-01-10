@@ -3,6 +3,12 @@
     padding-top: 0;
 }
 
+.content .dashboard-wrapper {
+    padding: 20px;
+    padding-top: 0;
+}
+
+
 .action-cell {
     display: flex;
 }

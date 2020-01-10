@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Fetch Now Serving List
 document.addEventListener("DOMContentLoaded", () => {
-    getAjaxAppointments('NowServing');
+    getAjaxAppointments('NowServing', course_id);
     setInterval(function(){ getAjaxAppointments('NowServing', course_id); }, 5000);
     // setTimeout(function(){ getAjaxAppointments('NowServing', course_id); }, 5000);
 });
@@ -63,15 +63,20 @@ function populatePendingTable(response, course_id) {
         var tr = document.createElement('tr');
         tr.innerHTML = `<th scope="row"> ${appointment.appointment_id} </th>` + 
                         `<td>${appointment.appointment_name}</td>` +
-                        `<td>${appointment.waiting_time}</td>` +
-                        `<td><form action="../process/appointmentFunctions.php" method="POST">` +
-                        `<input type="hidden" name="appointment_id" value="${appointment.appointment_id}" />` +
-                        `<button type="submit" class="btn btn-dark" name="call-submit">Call</button>` +
-                        `</form>` +
-                        `<form action="../process/appointmentFunctions.php" method="POST">` +
-                        `<input type="hidden" name="appointment_id" value="${appointment.appointment_id}" />` +
-                        `<button type="submit" class="btn btn-light" name="skip-submit">Skip</button>` +
-                        `</form></td>`;
+                        `<td>${appointment.waiting_time}</td>`;
+
+        var form = `<form action="../process/appointmentFunctions.php" method="POST">`;
+
+        if (course_id) {
+            form += `<input type="hidden" name="course_id" value="${course_id}" />`
+        }
+
+        form   +=   `<input type="hidden" name="appointment_id" value="${appointment.appointment_id}" />` +
+                    `<button type="submit" class="btn btn-dark" name="call-submit">Call</button>` +
+                    `</form>`;
+
+        tr.innerHTML += `<td>${form}</td>`;
+        
         tableBody.appendChild(tr);
     }
 
@@ -98,28 +103,28 @@ function populateNowServingTable(response, course_id) {
         } else {
             tr.innerHTML += `<td>General</td>` ;
         }
-        tr.innerHTML += `<td>${appointment.last_called} seconds </br> (Called: ${appointment.appointment_calls} times)</td>`;
-
-        var forms = `<td><form action="../process/appointmentFunctions.php" method="POST">` +
-                    `<input id="appointment_id_input" type="hidden" name="appointment_id" value="${appointment.appointment_id}" />`;
-                    
-        if (course_id) {
-            forms += `<input id="course_id_input" type="hidden" name="course_id" value="${course_id}" />`;
-        }
-
-        forms  +=   `<button type="submit" class="btn btn-dark" name="end-submit">End</button>` +
-                    `</form>` +
-                    `<form action="../process/appointmentFunctions.php" method="POST">` +
-                    `<input id="appointment_id_input" type="hidden" name="appointment_id" value="${appointment.appointment_id}" />`;
+        tr.innerHTML += `<td>${appointment.last_called} seconds </br> <i> Called: ${appointment.appointment_calls} time(s) </i> </td>`;
+                    // First form
+        var forms = `<form action="../process/appointmentFunctions.php" method="POST">`;
 
         if (course_id) {
-            forms += `<input id="course_id_input" type="hidden" name="course_id" value="${course_id}" />`;
+            forms += `<input type="hidden" name="course_id" value="${course_id}" />`;
         }
 
-        forms  +=   `<button type="submit" class="btn btn-light" name="recall-submit">Re-Call</button>` +
-                    `</form></td>`;
+        forms += `<input id="appointment_id_input" type="hidden" name="appointment_id" value="${appointment.appointment_id}" />` +
+                 `<button type="submit" class="btn btn-dark" name="end-submit">End</button>` +
+                 `</form>` +
+                 // Second form
+                 `<form action="../process/appointmentFunctions.php" method="POST">`;
+        
+        if (course_id) {
+            forms += `<input type="hidden" name="course_id" value="${course_id}" />`;
+        }
+            forms  +=`<input id="appointment_id_input" type="hidden" name="appointment_id" value="${appointment.appointment_id}" />` +
+                     `<button type="submit" class="btn btn-light" name="recall-submit">Re-Call</button>` +
+                     `</form>`;
 
-        tr.innerHTML += forms;
+        tr.innerHTML += `<td>${forms}</td>`;
         tableBody.appendChild(tr);
     }
 

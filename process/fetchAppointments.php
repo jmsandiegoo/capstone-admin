@@ -26,7 +26,7 @@
         
                 // Fetch course specific pending appointments
                 $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
-                        WHERE course_id = ? AND appointment_status = 'Pending' 
+                        WHERE course_id = ? AND appointment_status = 'Pending' AND DATE(appointment_createdate) = CURDATE() 
                         ORDER BY waiting_time DESC";
         
                 $appointmentWaitingResult = $db->query($qry, $course_id);
@@ -35,7 +35,7 @@
 
                 // Fetch general pending appointments
                 $qry = "SELECT * , TIMESTAMPDIFF(SECOND, appointment_createdate, NOW()) AS 'waiting_time' FROM Appointment 
-                        WHERE course_id IS NULL AND appointment_status = 'Pending' 
+                        WHERE course_id IS NULL AND appointment_status = 'Pending' AND DATE(appointment_createdate) = CURDATE() 
                         ORDER BY waiting_time DESC";
 
                 $appointmentWaitingResult = $db->query($qry);
@@ -63,7 +63,7 @@
             // Get the appointment records status now serving
             $qry = "SELECT a.* , TIMESTAMPDIFF(SECOND, a.appointment_lastcalled, NOW()) AS 'last_called', c.course_abbreviations  
             FROM Appointment a LEFT OUTER JOIN Course c ON a.course_id = c.id 
-            WHERE appointment_status = 'Now Serving' 
+            WHERE appointment_status = 'Now Serving' AND DATE(appointment_createdate) = CURDATE() 
             ORDER BY c.course_abbreviations DESC, last_called ASC";
 
             $appointmentServingResult = $db->query($qry);
