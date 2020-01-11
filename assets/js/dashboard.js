@@ -61,11 +61,11 @@ function populateDashboardTable(appointmentData) {
         var currentAppt = appointmentData[i];
         var tr = document.createElement('tr');
         if (currentAppt['course_abbreviations']) {
-            tr.innerHTML += `<td>${currentAppt['course_name']} (${currentAppt['course_abbreviations']})</td>`;
+            tr.innerHTML += `<td>${sanitize(currentAppt['course_name'])} (${sanitize(currentAppt['course_abbreviations'])})</td>`;
         } else {
-            tr.innerHTML += `<td>${currentAppt['course_name']}</td>`;
+            tr.innerHTML += `<td>${sanitize(currentAppt['course_name'])}</td>`;
         }
-        tr.innerHTML += `<td>${currentAppt['today_count']}</td>`
+        tr.innerHTML += `<td>${sanitize(currentAppt['today_count'])}</td>`
         if (currentAppt['course_id']) {
             tr.innerHTML += `<td><a href="./appointment.php?course_id=${currentAppt['course_id']}#pending-table">View</a></td`;
         } else {

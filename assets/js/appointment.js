@@ -61,9 +61,9 @@ function populatePendingTable(response, course_id) {
     for (var i = 0; i < response.length; i++) {
         var appointment = response[i];
         var tr = document.createElement('tr');
-        tr.innerHTML = `<th scope="row"> ${appointment.appointment_id} </th>` + 
-                        `<td>${appointment.appointment_name}</td>` +
-                        `<td>${timeFormatter(appointment.waiting_time)}</td>`;
+        tr.innerHTML = `<th scope="row"> ${sanitize(appointment.appointment_id)} </th>` + 
+                        `<td>${sanitize(appointment.appointment_name)}</td>` +
+                        `<td>${sanitize(timeFormatter(appointment.waiting_time))}</td>`;
 
         var form = `<form action="../process/appointmentFunctions.php" method="POST">`;
 
@@ -95,15 +95,16 @@ function populateNowServingTable(response, course_id) {
     for (var i = 0; i < response.length; i++) {
         var appointment = response[i];
         var tr = document.createElement('tr');
-        tr.innerHTML = `<th scope="row"> ${appointment.appointment_id} </th>` + 
-                        `<td>${appointment.appointment_name}</td>`;
+        tr.innerHTML = `<th scope="row"> ${sanitize(appointment.appointment_id)} </th>` + 
+                        `<td>${sanitize(appointment.appointment_name)}</td>` + 
+                        `<td>${sanitize(appointment.phoneNumber)}</td>`;
 
         if (appointment.course_abbreviations) {
-            tr.innerHTML += `<td>${appointment.course_abbreviations}</td>` ;
+            tr.innerHTML += `<td>${sanitize(appointment.course_abbreviations)}</td>` ;
         } else {
             tr.innerHTML += `<td>General</td>` ;
         }
-        tr.innerHTML += `<td>${timeFormatter(appointment.last_called)} </br> <i> Called: ${appointment.appointment_calls} time(s) </i> </td>`;
+        tr.innerHTML += `<td>${sanitize(timeFormatter(appointment.last_called))} </br> <i> Called: ${appointment.appointment_calls} time(s) </i> </td>`;
                     // First form
         var forms = `<form action="../process/appointmentFunctions.php" method="POST">`;
 

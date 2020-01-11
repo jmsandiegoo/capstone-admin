@@ -31,7 +31,6 @@
 
     while($row = $db->fetch_array($courseResult)) {
         $courseResultArray[] = $row;
-
         if ($course_id && $course_id == $row["id"]) {
             $appointmentName = $row["course_name"];
         }
@@ -135,7 +134,8 @@
                         <tr>
                         <th scope="col">Queue No.</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Course</th>
+                        <th scope="col">Contact No.</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Last Called</th>
                         <th scope="col">Actions</th> 
                         </tr>
