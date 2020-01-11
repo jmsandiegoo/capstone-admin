@@ -25,7 +25,7 @@ $admin_users = [
 $commands_paths = [
   __DIR__ . '/Commands/',
 ];
-
+/*
 // MAMP
 // Enter your MySQL database credentials
 $mysql_credentials = [
@@ -34,8 +34,8 @@ $mysql_credentials = [
     'password' => 'root',
     'database' => 'ict_open_house',
 ];
+*/
 
-/*
 // XAMPP
 // Enter your MySQL database credentials
 $mysql_credentials = [
@@ -43,7 +43,7 @@ $mysql_credentials = [
     'user'     => 'root',
     'password' => '',
     'database' => 'ict_open_house',
-];*/
+];
 
 
 
