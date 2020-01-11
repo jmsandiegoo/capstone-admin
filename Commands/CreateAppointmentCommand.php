@@ -46,7 +46,7 @@ class createApptCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.3.0';
+    protected $version = '0.3.0';
 
     /**
      * @var bool
@@ -118,8 +118,8 @@ class createApptCommand extends UserCommand
         $user_id = $user->getId();
 
         $pdo = DB::getPdo(); if (! DB::isDbConnected()) {return false;}
-        $sql = "INSERT INTO appointment (`user_id`, `chat_id`, `is_general`, `appointment_name`, `appointment_status`, `appointment_createdate`, `course_id`, `phoneNumber`) 
-        VALUES (:users_id, :chat_id, :is_general, :appointment_name, :appontment_status , :appointment_createdate , :course_id, :phoneNumber)";
+        $sql = "INSERT INTO appointment (`user_id`, `chat_id`, `is_general`, `appointment_name`, `appointment_status`, `course_id`, `phoneNumber`) 
+        VALUES (:users_id, :chat_id, :is_general, :appointment_name, :appontment_status , :course_id, :phoneNumber)";
         
         if($notes['interest'] == 'General'){
             $is_general = 1;
@@ -136,7 +136,7 @@ class createApptCommand extends UserCommand
         $sth->bindValue(':is_general', $is_general);
         $sth->bindValue(':appointment_name', $notes['name']);
         $sth->bindValue(':appontment_status', 'Pending');
-        $sth->bindValue(':appointment_createdate', 'NOW()');
+        //$sth->bindValue(':appointment_createdate', 'NOW()');
         $sth->bindValue(':course_id', $db_courseid);
         $sth->bindValue(':phoneNumber' ,$notes['phone_number']);
         
@@ -225,8 +225,13 @@ class createApptCommand extends UserCommand
                         $result = Request::sendMessage($data);
                         break;
                     }
-                    echo $return_array[2][$text];
-                    $notes['interest'] = $return_array[2][$text];
+                    if ($text != 'General'){
+                        $notes['interest'] = $return_array[2][$text];
+                    }
+                    else{
+                        $notes['interest'] = 'General';
+                    }
+                    
                 // no break
                 case 2:
                     if ($message->getContact() === null) {
@@ -247,7 +252,7 @@ class createApptCommand extends UserCommand
                 // no break
                 case 3:
                     $this->conversation->update();
-                    $out_text = "";
+                    $out_text = '';
                     unset($notes['state']);
                     foreach ($notes as $k => $v) {
                         $out_text .= PHP_EOL . ucfirst($k) . ': ' . $v;
