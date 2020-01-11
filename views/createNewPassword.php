@@ -4,15 +4,25 @@
     $helper = new Helper();
 
     $validReq = false;
+    $errorMessage = "";
 
     $selector = "";
     $validator = "";
+
+    // Valid request
     if (isset($_GET["selector"]) && isset($_GET["validator"])) {
         $selector = $_GET["selector"];
         $validator = $_GET["validator"];
-        if (!empty($_GET["selector"]) || !empty($_GET["validator"])) {
-            $validReq = !$validReq;
+        if (!empty($_GET["selector"]) && !empty($_GET["validator"])) {
+            $validReq = true;
         }
+    } else if (isset($_GET["reset"])) {
+        $validReq = false;
+        $errorMessage = "Reset password failed! Please try requesting for a new email password reset.";
+
+    } else {
+        $validReq = false;
+        $errorMessage = "We could not validate your request! Please try again";
     }
 
 ?>
@@ -38,11 +48,6 @@
                     <input type="hidden" name="selector" value="<?php echo $selector ?>">
                     <input type="hidden" name="validator" value="<?php echo $validator ?>">
                     <input type="hidden" name="createNewPassword" value="true">
-                    <!-- <?php if($login_error): ?>
-                        <div id="loginErrorMessage" class="alert alert-danger" role="alert">
-                            <?php echo $login_error ?>
-                        </div>
-                    <?php endif; ?> -->
                     <button class="btn btn-login" type="submit" name="reset-password-submit">Create New Password</button>
                 </form>
                 <small><a href="<?php echo $helper->pageUrl("index.php")?>" id="backBtn"><u>Back to Login</u></a></small>
@@ -50,7 +55,7 @@
             <?php else: ?>
                 <h1>Sorry...</h1>
                 <div id="loginErrorMessage" class="alert alert-danger" role="alert">
-                    We could not validate your request! Please try again
+                    <?php echo $errorMessage ?>
                 </div>
                 <small><a href="<?php echo $helper->pageUrl("index.php")?>" id="backBtn"><u>Back to Login</u></a></small>
             <?php endif; ?>

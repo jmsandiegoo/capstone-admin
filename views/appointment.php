@@ -36,6 +36,22 @@
             $appointmentName = $row["course_name"];
         }
     }
+
+    $errorMessage = "";
+    // Error handling
+    if (isset($_GET['call'])) {
+        if ($_GET['call'] == 'failed') {
+            $errorMessage = "Oops, it seems that a problem occured while calling a queue number. Please try again!";
+        }
+    } else if (isset($_GET['end'])) {
+        if ($_GET['end'] == 'failed') {
+            $errorMessage = "Ending the currently served appointment <b>failed</b>! Please try again.";
+        }
+    } else if (isset($_GET['recall'])) {
+        if ($_GET['recall'] == 'failed') {
+            $errorMessage = "Recalling the queue number <b>failed</b>! Please try again.";
+        }
+    } 
 ?>
 
 <!DOCTYPE html>
@@ -47,6 +63,11 @@
         <section class="content">
             <?php include $helper->subviewPath('navbar.php')?>
             <!-- Dashboard -->
+            <?php if ($errorMessage): ?>
+                <div id="errorMessage" class="alert alert-danger" role="alert">
+                            <?php echo $errorMessage ?>
+                </div>
+            <?php endif; ?>
             <div class="dashboard-wrapper">
                 <div class="container-fluid">
                     <div class="row align-items-stretch">

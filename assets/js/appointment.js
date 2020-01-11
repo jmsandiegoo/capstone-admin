@@ -63,7 +63,7 @@ function populatePendingTable(response, course_id) {
         var tr = document.createElement('tr');
         tr.innerHTML = `<th scope="row"> ${appointment.appointment_id} </th>` + 
                         `<td>${appointment.appointment_name}</td>` +
-                        `<td>${appointment.waiting_time}</td>`;
+                        `<td>${timeFormatter(appointment.waiting_time)}</td>`;
 
         var form = `<form action="../process/appointmentFunctions.php" method="POST">`;
 
@@ -103,7 +103,7 @@ function populateNowServingTable(response, course_id) {
         } else {
             tr.innerHTML += `<td>General</td>` ;
         }
-        tr.innerHTML += `<td>${appointment.last_called} seconds </br> <i> Called: ${appointment.appointment_calls} time(s) </i> </td>`;
+        tr.innerHTML += `<td>${timeFormatter(appointment.last_called)} </br> <i> Called: ${appointment.appointment_calls} time(s) </i> </td>`;
                     // First form
         var forms = `<form action="../process/appointmentFunctions.php" method="POST">`;
 
@@ -133,4 +133,16 @@ function populateNowServingTable(response, course_id) {
         tr.innerHTML = `<td colspan="100%" class="text-center">There are no appointments being served currently.</td>`;
         tableBody.appendChild(tr);
     }
+}
+
+function timeFormatter (seconds) {
+    var sec_num = parseInt(seconds, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours + ':' + minutes + ':' + seconds;
 }

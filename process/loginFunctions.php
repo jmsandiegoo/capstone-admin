@@ -146,8 +146,11 @@
         $result = $db->query($qry, $selector, $currentDate);
 
         if ($db->num_rows($result) <= 0) {
-            echo "You need to resubmit your reset request1";
             //  You need to resubmit your reset request
+            echo "You need to resubmit your reset request1";
+            $pageUrl = $helper->pageUrl('createNewPassword.php') . '?reset=failed';
+            header("Location: $pageUrl");
+            exit; 
         }
 
         while ($row = $db->fetch_array($result)) {
@@ -157,6 +160,9 @@
             if (!$tokenCheck) {
                 // You need to resubmit your reset request
                 echo "You need to resubmit your reset request2";
+                $pageUrl = $helper->pageUrl('createNewPassword.php') . '?reset=failed';
+                header("Location: $pageUrl");
+                exit; 
             } else if ($tokenCheck) {
 
                 // Update the password
@@ -170,7 +176,9 @@
                 if ($db->num_rows($accountResult) <= 0) {
                     // You need to resubmit your reset request
                     echo "You need to resubmit your reset request3";
-
+                    $pageUrl = $helper->pageUrl('createNewPassword.php') . '?reset=failed';
+                    header("Location: $pageUrl");
+                    exit; 
                 } else {
                     $qry = "UPDATE Account SET password=? WHERE email=?";
                     $db->query($qry, password_hash($password, PASSWORD_DEFAULT), $tokenEmail);
