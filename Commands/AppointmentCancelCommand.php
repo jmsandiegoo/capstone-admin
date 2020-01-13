@@ -1,70 +1,47 @@
 <?php
-/**
- * This file is part of the TelegramBot package.
- *
- * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-//namespace Longman\TelegramBot\Commands\UserCommands;
 namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Commands\Command;
 use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\KeyboardButton;
 use Longman\TelegramBot\Entities\PhotoSize;
+use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\DB;
 
-/**
- * User "/survey" command
- *
- * Command that demonstrated the Conversation funtionality in form of a simple survey.
- */
 class cancelApptCommand extends UserCommand
 {
-    
     /**
      * @var string
      */
     protected $name = 'cancelAppt';
-
     /**
      * @var string
      */
     protected $description = 'cancelAppt for visitors';
-
     /**
      * @var string
      */
     protected $usage = '/cancelAppt';
-
     /**
      * @var string
      */
     protected $version = '0.3.0';
-
     /**
      * @var bool
      */
     protected $need_mysql = true;
-
     /**
      * @var bool
      */
     protected $private_only = true;
-
     /**
      * Conversation Object
      *
      * @var \Longman\TelegramBot\Conversation
      */
     protected $conversation;
-
     /**
      * Command execute method
      *
@@ -74,21 +51,25 @@ class cancelApptCommand extends UserCommand
     
     function check_status($user_id){
         $pdo = DB::getPdo(); if (! DB::isDbConnected()) {return false;}
-        $sql = "SELECT appointment_status FROM `appointment` WHERE `user_id` =". $user_id ." AND `appointment_status` = 'Pending' OR 'Now Serving'";
+        $sql = "SELECT * FROM `appointment` WHERE DATE(appointment_createdate) = CURDATE() AND `user_id` =". $user_id ." AND `appointment_status` = 'Pending'";
         $sth = $pdo->prepare($sql);
         $sth->execute();
         $status = $sth->fetchAll(\PDO::FETCH_OBJ);
+        foreach($status as $obj){
+            $appt_id = $obj->appointment_id;
+        }
         $countstatus = count($status);
+        $return_array= [];
         if($countstatus>0){
-            return true;
+            return array(true,$appt_id);
         }   
         else{
-            return false;
+            return array(false);
         }
     }
-    function cancel_queue($user_id){
+    function cancel_queue($user_id,$appoint_id){
         $pdo = DB::getPdo(); if (! DB::isDbConnected()) {return false;}
-        $sql = "UPDATE `appointment` SET `appointment_status` = 'Cancelled' WHERE `user_id` =". $user_id;
+        $sql = "UPDATE `appointment` SET `appointment_status` = 'Cancelled' WHERE `user_id` =". $user_id ." AND `appointment_id` =". $appoint_id;
         $sth = $pdo->prepare($sql);
         $sth->execute();
     }
@@ -113,11 +94,12 @@ class cancelApptCommand extends UserCommand
         }
 
         $return_status = $this->check_status($user_id);
-        if($return_status==false){
+        if($return_status[0]==false){
             $data['text'] = 'You do not have a pending appointment. Please create an appointment at /createAppt if you would like to create one, thank you.';
             $result = Request::sendMessage($data);
         }
         else{
+            $appointment_id = $return_status[1];
             //Conversation start
             $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
@@ -164,7 +146,7 @@ class cancelApptCommand extends UserCommand
                     unset($notes['state']);
                     if ($notes['choice'] == "Yes"){
                         //Cancel
-                        $this->cancel_queue($user_id);
+                        $this->cancel_queue($user_id,$appointment_id);
                         $data['text']      = "Your queue has been cancelled.";
                     }
                     else if ($notes['choice'] == "No"){
