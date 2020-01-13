@@ -1,14 +1,5 @@
 <?php
-/**
- * This file is part of the TelegramBot package.
- *
- * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
-//namespace Longman\TelegramBot\Commands\UserCommands;
 namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\DB;
@@ -20,11 +11,6 @@ use Longman\TelegramBot\Entities\KeyboardButton;
 use Longman\TelegramBot\Entities\PhotoSize;
 use Longman\TelegramBot\Request;
 
-/**
- * User "/survey" command
- *
- * Command that demonstrated the Conversation funtionality in form of a simple survey.
- */
 class createApptCommand extends UserCommand
 {
     
@@ -92,10 +78,20 @@ class createApptCommand extends UserCommand
 
     function check_status($user_id){
         $pdo = DB::getPdo(); if (! DB::isDbConnected()) {return false;}
-        $sql = "SELECT appointment_status FROM `appointment` WHERE `user_id` =". $user_id ." AND `appointment_status` = 'Pending' OR 'Now Serving'";
+        $sql = "SELECT * FROM `appointment` WHERE DATE(appointment_createdate) = CURDATE() AND `user_id` = ". $user_id ." AND `appointment_status` = 'Pending' OR DATE(appointment_createdate) = CURDATE() AND `user_id` = ". $user_id ." AND `appointment_status` = 'Now Serving'";
+
         $sth = $pdo->prepare($sql);
         $sth->execute();
         $status = $sth->fetchAll(\PDO::FETCH_OBJ);
+
+        $dates_array = [];
+        foreach ($status as $obj)
+        {
+            $date_2 = $obj->appointment_createdate;
+            array_push($dates_array,$date_2);
+        }
+        print_r($dates_array);
+
         $countstatus = count($status);
         if($countstatus>0){
             return true;
@@ -136,7 +132,6 @@ class createApptCommand extends UserCommand
         $sth->bindValue(':is_general', $is_general);
         $sth->bindValue(':appointment_name', $notes['name']);
         $sth->bindValue(':appontment_status', 'Pending');
-        //$sth->bindValue(':appointment_createdate', 'NOW()');
         $sth->bindValue(':course_id', $db_courseid);
         $sth->bindValue(':phoneNumber' ,$notes['phone_number']);
         
@@ -274,7 +269,7 @@ class createApptCommand extends UserCommand
                         $qno = $obj->appointment_id;
                     }
                     $queue_text = "Queue Number: " . $qno;
-                    $data['text']      = $queue_text. PHP_EOL .$out_text;
+                    $data['text']      = $queue_text. PHP_EOL .$out_text. PHP_EOL ."Please wait patiently and we will send you a telegram message when it is your turn.";
 
                     $result = Request::sendMessage($data);
                     break;
