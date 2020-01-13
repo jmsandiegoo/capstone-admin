@@ -32,7 +32,7 @@ class QuizCommand extends UserCommand
     /**
      * @var string
      */
-    protected $description = 'Quiz for what you might be interested in.';
+    protected $description = 'Take a quiz of 9 questions for course recommendations.';
 
     /**
      * @var string
@@ -116,16 +116,17 @@ class QuizCommand extends UserCommand
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'Do you prefer to be more hands-on or theory-based?';
+                    $data['text'] = '1. Do you prefer to be more hands-on or theory-based?';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
                 }
                 if ($text == 'Hands-on')
                 {
-                    $notes['ICT'] += 1;
+                    $notes['IT'] += 1;
                     $notes['IM'] += 1;
                     $notes['CICT'] += 1;
                 }
@@ -136,7 +137,7 @@ class QuizCommand extends UserCommand
                 }
                 else if ($text == "I'm not sure")
                 {
-                    $notes['ICT'] += -1;
+                    $notes['IT'] += -1;
                     $notes['FI'] += -1;
                     $notes['IM'] += -1;
                     $notes['CDF'] += -1;
@@ -148,26 +149,27 @@ class QuizCommand extends UserCommand
                     $notes['state'] = 1;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = (new Keyboard(['A', 'B','C','D','E']))
+                    $data['reply_markup'] = (new Keyboard(['A','B','C','D','E']))
                         ->setResizeKeyboard(true)
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'Which of the following sounds more interesting to you?' . PHP_EOL.
+                    $data['text'] = '2. Which of the following sounds more interesting to you?' . PHP_EOL.
                     'a.	Application development' . PHP_EOL.
                     'b.	Photoshop and animations' . PHP_EOL.
                     'c.	Enterprise and business planning' . PHP_EOL.
                     'd.	Networking and cloud management' . PHP_EOL.
                     'e.	I’m not sure';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
                 }
                 if ($text == 'A')
                 {
-                    $notes['ICT'] += 1;
+                    $notes['IT'] += 1;
                 }
                 else if ($text == 'B')
                 {
@@ -183,7 +185,7 @@ class QuizCommand extends UserCommand
                 }
                 else if ($text == 'E')
                 {
-                    $notes['ICT'] += -1;
+                    $notes['IT'] += -1;
                     $notes['FI'] += -1;
                     $notes['IM'] += -1;
                     $notes['CDF'] += -1;
@@ -195,19 +197,20 @@ class QuizCommand extends UserCommand
                     $notes['state'] = 2;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = (new Keyboard(['A', 'B','C','D','E']))
+                    $data['reply_markup'] = (new Keyboard(['A','B','C','D','E']))
                         ->setResizeKeyboard(true)
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'Which of the following sounds more interesting to you?' . PHP_EOL.
+                    $data['text'] = '3. Which of the following sounds more interesting to you?' . PHP_EOL.
                     'a.	Creating a website' . PHP_EOL.
                     'b.	Data charts and visualizations' . PHP_EOL.
                     'c.	3D animation modeling' . PHP_EOL.
                     'd.	Networking security testing and protection' . PHP_EOL.
                     'e.	I’m not sure';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
@@ -215,7 +218,7 @@ class QuizCommand extends UserCommand
                 
                 if ($text == 'A')
                 {
-                    $notes['ICT'] += 1;
+                    $notes['IT'] += 1;
                 }
                 else if ($text == 'B')
                 {
@@ -231,7 +234,7 @@ class QuizCommand extends UserCommand
                 }
                 else if ($text == 'E')
                 {
-                    $notes['ICT'] += -1;
+                    $notes['IT'] += -1;
                     $notes['FI'] += -1;
                     $notes['IM'] += -1;
                     $notes['CDF'] += -1;
@@ -248,9 +251,10 @@ class QuizCommand extends UserCommand
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'I believe that I am a very creative individual.';
+                    $data['text'] = '4. I believe that I am a very creative individual.';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
@@ -258,7 +262,7 @@ class QuizCommand extends UserCommand
 
                 if ($text == 'Yes')
                 {
-                    $notes['ICT'] += 1;
+                    $notes['IT'] += 1;
                     $notes['IM'] += 1;
                     $notes['CICT'] += 1;
                 }
@@ -279,10 +283,11 @@ class QuizCommand extends UserCommand
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'I have a strong interest in designs and animations.';
+                    $data['text'] = '5. I have a strong interest in designs and animations.';
                     if ($text !== '') {
-                            $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
-                        }
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -302,16 +307,17 @@ class QuizCommand extends UserCommand
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'I have a strong interest in web and applications design.';
+                    $data['text'] = '6. I have a strong interest in web and applications design.';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
                 }
                 if ($text == 'Yes')
                 {
-                    $notes['ICT'] += 1;
+                    $notes['IT'] += 1;
                 }
                 $text = '';
 
@@ -325,9 +331,10 @@ class QuizCommand extends UserCommand
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'I have a strong interest in understanding how networks and cloud applications work.';
+                    $data['text'] = '7. I have a strong interest in understanding how networks and cloud applications work.';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
@@ -347,9 +354,10 @@ class QuizCommand extends UserCommand
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'I have a strong interest in analyzing business data and processes.';
+                    $data['text'] = '8. I have a strong interest in analyzing business data and processes.';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
@@ -370,28 +378,39 @@ class QuizCommand extends UserCommand
                         ->setOneTimeKeyboard(true)
                         ->setSelective(true);
 
-                    $data['text'] = 'I am very interested in joining the IT industry when I come out to work.';
+                    $data['text'] = '9. I am very interested in joining the IT industry when I come out to work.';
                     if ($text !== '') {
-                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        $data['text'] = 'Select your answer by choosing a keyboard option.' . PHP_EOL.
+                        'If options are not available, please click on the icon beside the microphone.';
                     }
                     $result = Request::sendMessage($data);
                     break;
                 }
                 if ($text == 'Disagree')
                 {
-                    $notes['ICT'] += -1;
-                    $notes['FI'] += -1;
-                    $notes['IM'] += -1;
-                    $notes['CDF'] += -1;
-                    $notes['CICT'] += -1;
+                    $notes['IT'] = 0;
+                    $notes['FI'] = 0;
+                    $notes['IM'] = 0;
+                    $notes['CDF'] = 0;
+                    $notes['CICT'] = 0;
                 }
                 $text = '';
             case 9:
                 $this->conversation->update();
-                $out_text = '/Quiz result:' . PHP_EOL;
+                $out_text = '/quiz result:' . PHP_EOL . 
+                'Higher points indicates a stronger interest in the course.' . PHP_EOL .
+                'IT: Information Technology' . PHP_EOL .
+                'FI: Financial Informatics' . PHP_EOL .
+                'IM: Immersive Media' . PHP_EOL .
+                'CDF: Cybersecurity & Digital Forensics' . PHP_EOL .
+                'CICT: Common ICT Programme' . PHP_EOL;
                 unset($notes['state']);
                 
-                //if(){}
+                if($notes['IT'] == 0 && $notes['FI'] == 0 && $notes['IM'] == 0 && $notes['CDF'] == 0 && $notes['CICT'] == 0)
+                {
+                    $out_text = '/quiz result:' . PHP_EOL . 
+                    'You have not shown enough interest in our courses through our quiz, it might be better for you to choose a course outside of School of ICT' . PHP_EOL;
+                }
 
                 foreach ($notes as $k => $v) {
                     $out_text .= PHP_EOL . ucfirst($k) . ': ' . $v;
