@@ -117,9 +117,11 @@ class QuizCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = 'Do you prefer to be more hands-on or theory-based?';
-
-                $result = Request::sendMessage($data);
-                break;
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
+                    $result = Request::sendMessage($data);
+                    break;
                 }
                 if ($text == 'Hands-on')
                 {
@@ -140,7 +142,7 @@ class QuizCommand extends UserCommand
                     $notes['CDF'] += -1;
                     $notes['CICT'] += -1;
                 }
-                
+                $text = '';
             case 1:
                 if ($text === '' || !in_array($text, ['A','B','C','D','E'], true)) {
                     $notes['state'] = 1;
@@ -157,7 +159,9 @@ class QuizCommand extends UserCommand
                     'c.	Enterprise and business planning' . PHP_EOL.
                     'd.	Networking and cloud management' . PHP_EOL.
                     'e.	I’m not sure';
-
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -185,6 +189,7 @@ class QuizCommand extends UserCommand
                     $notes['CDF'] += -1;
                     $notes['CICT'] += -1;
                 }
+                $text = '';
             case 2:
                 if ($text === '' || !in_array($text, ['A', 'B','C','D','E'], true)) {
                     $notes['state'] = 2;
@@ -201,7 +206,9 @@ class QuizCommand extends UserCommand
                     'c.	3D animation modeling' . PHP_EOL.
                     'd.	Networking security testing and protection' . PHP_EOL.
                     'e.	I’m not sure';
-
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -230,6 +237,7 @@ class QuizCommand extends UserCommand
                     $notes['CDF'] += -1;
                     $notes['CICT'] += -1;
                 }   
+                $text = '';
             case 3:
                 if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
                     $notes['state'] = 3;
@@ -241,10 +249,13 @@ class QuizCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = 'I believe that I am a very creative individual.';
-
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
+
                 if ($text == 'Yes')
                 {
                     $notes['ICT'] += 1;
@@ -256,6 +267,8 @@ class QuizCommand extends UserCommand
                     $notes['FI'] += 1;
                     $notes['CDF'] += 1;
                 }
+                $text = '';
+
             case 4:
                 if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
                     $notes['state'] = 4;
@@ -267,7 +280,9 @@ class QuizCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = 'I have a strong interest in designs and animations.';
-
+                    if ($text !== '') {
+                            $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                        }
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -275,6 +290,7 @@ class QuizCommand extends UserCommand
                 {
                     $notes['IM'] += 1;
                 }
+                $text = '';
                 
             case 5:
                 if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
@@ -287,7 +303,9 @@ class QuizCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = 'I have a strong interest in web and applications design.';
-
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -295,6 +313,8 @@ class QuizCommand extends UserCommand
                 {
                     $notes['ICT'] += 1;
                 }
+                $text = '';
+
             case 6:
                 if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
                     $notes['state'] = 6;
@@ -306,7 +326,9 @@ class QuizCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = 'I have a strong interest in understanding how networks and cloud applications work.';
-
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -314,6 +336,7 @@ class QuizCommand extends UserCommand
                 {
                     $notes['CDF'] += 1;
                 }
+                $text = '';
             case 7:
                 if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
                     $notes['state'] = 7;
@@ -325,7 +348,9 @@ class QuizCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = 'I have a strong interest in analyzing business data and processes.';
-
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -333,6 +358,7 @@ class QuizCommand extends UserCommand
                 {
                     $notes['FI'] += 1;
                 }
+                $text = '';
                 // no break  
             case 8:
                 if ($text === '' || !in_array($text, ['Agree', 'Disagree'], true)) {
@@ -345,17 +371,21 @@ class QuizCommand extends UserCommand
                         ->setSelective(true);
 
                     $data['text'] = 'I am very interested in joining the IT industry when I come out to work.';
+                    if ($text !== '') {
+                        $data['text'] = 'Select your Area of Interest, choose a keyboard option:';
+                    }
                     $result = Request::sendMessage($data);
                     break;
                 }
                 if ($text == 'Disagree')
-                    {
-                        $notes['ICT'] += -1;
-                        $notes['FI'] += -1;
-                        $notes['IM'] += -1;
-                        $notes['CDF'] += -1;
-                        $notes['CICT'] += -1;
-                    }
+                {
+                    $notes['ICT'] += -1;
+                    $notes['FI'] += -1;
+                    $notes['IM'] += -1;
+                    $notes['CDF'] += -1;
+                    $notes['CICT'] += -1;
+                }
+                $text = '';
             case 9:
                 $this->conversation->update();
                 $out_text = '/Quiz result:' . PHP_EOL;
