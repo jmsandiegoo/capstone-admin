@@ -1,0 +1,379 @@
+<?php
+/**
+ * This file is part of the TelegramBot package.
+ *
+ * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Longman\TelegramBot\Commands\UserCommands;
+
+use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Entities\KeyboardButton;
+use Longman\TelegramBot\Entities\PhotoSize;
+use Longman\TelegramBot\Request;
+
+/**
+ * User "/quiz" command
+ *
+ * Command that demonstrated the Conversation funtionality in form of a simple quiz.
+ */
+class QuizCommand extends UserCommand
+{
+    /**
+     * @var string
+     */
+    protected $name = 'quiz';
+
+    /**
+     * @var string
+     */
+    protected $description = 'Quiz for what you might be interested in.';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/quiz';
+
+    /**
+     * @var string
+     */
+    protected $version = '0.3.0';
+
+    /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+
+    /**
+     * @var bool
+     */
+    protected $private_only = true;
+
+    /**
+     * Conversation Object
+     *
+     * @var \Longman\TelegramBot\Conversation
+     */
+    protected $conversation;
+
+    /**
+     * Command execute method
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute()
+    {
+        $message = $this->getMessage();
+
+        $chat    = $message->getChat();
+        $user    = $message->getFrom();
+        $text    = trim($message->getText(true));
+        $chat_id = $chat->getId();
+        $user_id = $user->getId();
+
+        //Preparing Response
+        $data = [
+            'chat_id' => $chat_id,
+        ];
+
+        if ($chat->isGroupChat() || $chat->isSuperGroup()) {
+            //reply to message id is applied by default
+            //Force reply is applied by default so it can work with privacy on
+            $data['reply_markup'] = Keyboard::forceReply(['selective' => true]);
+        }
+
+        //Conversation start
+        $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
+
+        $notes = &$this->conversation->notes;
+        !is_array($notes) && $notes = [];
+
+        //cache data from the tracking session if any
+        $state = 0;
+        if (isset($notes['state'])) {
+            $state = $notes['state'];
+        }
+
+        $result = Request::emptyResponse();
+
+        //State machine
+        //Entrypoint of the machine state if given by the track
+        //Every time a step is achieved the track is updated
+        switch ($state) {
+            case 0:
+                if ($text === '' || !in_array($text, ['Hands-on', 'Theory-based',"I'm not sure"], true)) {
+                    $notes['state'] = 0;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Hands-on', 'Theory-based',"I'm not sure"]))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'Do you prefer to be more hands-on or theory-based?';
+
+                $result = Request::sendMessage($data);
+                break;
+                }
+                if ($text == 'Hands-on')
+                {
+                    $notes['ICT'] += 1;
+                    $notes['IM'] += 1;
+                    $notes['CICT'] += 1;
+                }
+                else if ($text == 'Theory-based')
+                {
+                    $notes['FI'] += 1;
+                    $notes['CDF'] += 1;
+                }
+                else if ($text == "I'm not sure")
+                {
+                    $notes['ICT'] += -1;
+                    $notes['FI'] += -1;
+                    $notes['IM'] += -1;
+                    $notes['CDF'] += -1;
+                    $notes['CICT'] += -1;
+                }
+                
+            case 1:
+                if ($text === '' || !in_array($text, ['A','B','C','D','E'], true)) {
+                    $notes['state'] = 1;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['A', 'B','C','D','E']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'Which of the following sounds more interesting to you?' . PHP_EOL.
+                    'a.	Application development' . PHP_EOL.
+                    'b.	Photoshop and animations' . PHP_EOL.
+                    'c.	Enterprise and business planning' . PHP_EOL.
+                    'd.	Networking and cloud management' . PHP_EOL.
+                    'e.	I’m not sure';
+
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                if ($text == 'A')
+                {
+                    $notes['ICT'] += 1;
+                }
+                else if ($text == 'B')
+                {
+                    $notes['IM'] += 1;
+                }
+                else if ($text == 'C')
+                {
+                    $notes['FI'] += 1;
+                }
+                else if ($text == 'D')
+                {
+                    $notes['CDF'] += 1;
+                }
+                else if ($text == 'E')
+                {
+                    $notes['ICT'] += -1;
+                    $notes['FI'] += -1;
+                    $notes['IM'] += -1;
+                    $notes['CDF'] += -1;
+                    $notes['CICT'] += -1;
+                }
+            case 2:
+                if ($text === '' || !in_array($text, ['A', 'B','C','D','E'], true)) {
+                    $notes['state'] = 2;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['A', 'B','C','D','E']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'Which of the following sounds more interesting to you?' . PHP_EOL.
+                    'a.	Creating a website' . PHP_EOL.
+                    'b.	Data charts and visualizations' . PHP_EOL.
+                    'c.	3D animation modeling' . PHP_EOL.
+                    'd.	Networking security testing and protection' . PHP_EOL.
+                    'e.	I’m not sure';
+
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                
+                if ($text == 'A')
+                {
+                    $notes['ICT'] += 1;
+                }
+                else if ($text == 'B')
+                {
+                    $notes['FI'] += 1;
+                }
+                else if ($text == 'C')
+                {
+                    $notes['IM'] += 1;
+                }
+                else if ($text == 'D')
+                {
+                    $notes['CDF'] += 1;
+                }
+                else if ($text == 'E')
+                {
+                    $notes['ICT'] += -1;
+                    $notes['FI'] += -1;
+                    $notes['IM'] += -1;
+                    $notes['CDF'] += -1;
+                    $notes['CICT'] += -1;
+                }   
+            case 3:
+                if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
+                    $notes['state'] = 3;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'I believe that I am a very creative individual.';
+
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                if ($text == 'Yes')
+                {
+                    $notes['ICT'] += 1;
+                    $notes['IM'] += 1;
+                    $notes['CICT'] += 1;
+                }
+                else if ($text == 'No')
+                {
+                    $notes['FI'] += 1;
+                    $notes['CDF'] += 1;
+                }
+            case 4:
+                if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
+                    $notes['state'] = 4;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'I have a strong interest in designs and animations.';
+
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                if ($text == 'Yes')
+                {
+                    $notes['IM'] += 1;
+                }
+                
+            case 5:
+                if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
+                    $notes['state'] = 5;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'I have a strong interest in web and applications design.';
+
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                if ($text == 'Yes')
+                {
+                    $notes['ICT'] += 1;
+                }
+            case 6:
+                if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
+                    $notes['state'] = 6;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'I have a strong interest in understanding how networks and cloud applications work.';
+
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                if ($text == 'Yes')
+                {
+                    $notes['CDF'] += 1;
+                }
+            case 7:
+                if ($text === '' || !in_array($text, ['Yes', 'No'], true)) {
+                    $notes['state'] = 7;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'I have a strong interest in analyzing business data and processes.';
+
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                if ($text == 'Yes')
+                {
+                    $notes['FI'] += 1;
+                }
+                // no break  
+            case 8:
+                if ($text === '' || !in_array($text, ['Agree', 'Disagree'], true)) {
+                    $notes['state'] = 8;
+                    $this->conversation->update();
+
+                    $data['reply_markup'] = (new Keyboard(['Agree', 'Disagree']))
+                        ->setResizeKeyboard(true)
+                        ->setOneTimeKeyboard(true)
+                        ->setSelective(true);
+
+                    $data['text'] = 'I am very interested in joining the IT industry when I come out to work.';
+                    $result = Request::sendMessage($data);
+                    break;
+                }
+                if ($text == 'Disagree')
+                    {
+                        $notes['ICT'] += -1;
+                        $notes['FI'] += -1;
+                        $notes['IM'] += -1;
+                        $notes['CDF'] += -1;
+                        $notes['CICT'] += -1;
+                    }
+            case 9:
+                $this->conversation->update();
+                $out_text = '/Quiz result:' . PHP_EOL;
+                unset($notes['state']);
+                
+                //if(){}
+
+                foreach ($notes as $k => $v) {
+                    $out_text .= PHP_EOL . ucfirst($k) . ': ' . $v;
+                }
+                $data['reply_markup'] = Keyboard::remove(['selective' => true]);
+                $data['text']      = $out_text;
+                $this->conversation->stop();
+
+                $result = Request::sendMessage($data);
+                break;        
+        }
+
+        return $result;
+    }
+}
