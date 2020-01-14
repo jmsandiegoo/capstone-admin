@@ -128,7 +128,6 @@ class QuizCommand extends UserCommand
                 {
                     $notes['IT'] += 1;
                     $notes['IM'] += 1;
-                    $notes['CICT'] += 1;
                 }
                 else if ($text == 'Theory-based')
                 {
@@ -141,7 +140,6 @@ class QuizCommand extends UserCommand
                     $notes['FI'] += -1;
                     $notes['IM'] += -1;
                     $notes['CDF'] += -1;
-                    $notes['CICT'] += -1;
                 }
                 $text = '';
             case 1:
@@ -189,7 +187,6 @@ class QuizCommand extends UserCommand
                     $notes['FI'] += -1;
                     $notes['IM'] += -1;
                     $notes['CDF'] += -1;
-                    $notes['CICT'] += -1;
                 }
                 $text = '';
             case 2:
@@ -238,7 +235,6 @@ class QuizCommand extends UserCommand
                     $notes['FI'] += -1;
                     $notes['IM'] += -1;
                     $notes['CDF'] += -1;
-                    $notes['CICT'] += -1;
                 }   
                 $text = '';
             case 3:
@@ -264,7 +260,6 @@ class QuizCommand extends UserCommand
                 {
                     $notes['IT'] += 1;
                     $notes['IM'] += 1;
-                    $notes['CICT'] += 1;
                 }
                 else if ($text == 'No')
                 {
@@ -392,7 +387,6 @@ class QuizCommand extends UserCommand
                     $notes['FI'] = 0;
                     $notes['IM'] = 0;
                     $notes['CDF'] = 0;
-                    $notes['CICT'] = 0;
                 }
                 $text = '';
             case 9:
@@ -406,10 +400,15 @@ class QuizCommand extends UserCommand
                 'CICT: Common ICT Programme' . PHP_EOL;
                 unset($notes['state']);
                 
-                if($notes['IT'] == 0 && $notes['FI'] == 0 && $notes['IM'] == 0 && $notes['CDF'] == 0 && $notes['CICT'] == 0)
+                if($notes['IT'] == 0 && $notes['FI'] == 0 && $notes['IM'] == 0 && $notes['CDF'] == 0)
                 {
                     $out_text = '/quiz result:' . PHP_EOL . 
                     'You have not shown enough interest in our courses through our quiz, it might be better for you to choose a course outside of School of ICT' . PHP_EOL;
+                }
+                else if($notes['IT'] >= 1 && $notes['IT'] <= 3 && $notes['FI'] >= 1 && $notes['FI'] <= 3  && $notes['IM'] >= 1 && $notes['IM'] <= 3 && $notes['CDF'] >= 1 && $notes['CDF'] <= 3)
+                {
+                    $out_text = '/quiz result:' . PHP_EOL . 
+                    'You have not shown enough interest in a particular course through our quiz, if you are still interested in applying for school of information technology and choose in year 2, CICT is a recommended course for you.' . PHP_EOL;
                 }
 
                 foreach ($notes as $k => $v) {
