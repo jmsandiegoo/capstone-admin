@@ -32,7 +32,7 @@ class QuizCommand extends UserCommand
     /**
      * @var string
      */
-    protected $description = 'Take a quiz of 9 questions for course recommendations.';
+    protected $description = 'To take a quiz of 9 questions for course recommendations!';
 
     /**
      * @var string

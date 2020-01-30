@@ -29,7 +29,7 @@ class HelpCommand extends UserCommand
     /**
      * @var string
      */
-    protected $description = 'Show bot commands help';
+    protected $description = 'To show what commands this bot has!';
 
     /**
      * @var string
@@ -73,8 +73,6 @@ class HelpCommand extends UserCommand
                     $data['text'] .= '/' . $admin_command->getName() . ' - ' . $admin_command->getDescription() . PHP_EOL;
                 }
             }
-
-            $data['text'] .= PHP_EOL . 'For exact command help type: /help <command>';
 
             return Request::sendMessage($data);
         }

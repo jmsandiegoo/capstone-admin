@@ -56,7 +56,7 @@ class StartCommand extends SystemCommand
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text    = 'Hi there!' . PHP_EOL . 'Welcome to Ngee Ann Polytechnic\'s School of ICT\'s Open House bot! Type /help to see all commands!';
+        $text    = 'Hi there!' . PHP_EOL . 'Welcome to Ngee Ann Polytechnic\'s School of ICT\'s Open House bot! Type /help to see all commands!'.PHP_EOL.PHP_EOL.'Type /appointment to enter the chatbot\'s appointment system,'.PHP_EOL.'or /quiz to take a quiz of 9 questions for course recommendations!';
 
         $data = [
             'chat_id' => $chat_id,

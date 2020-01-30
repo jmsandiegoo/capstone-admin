@@ -24,7 +24,7 @@ class AppointmentCommand extends UserCommand
     /**
      * @var string
      */
-    protected $description = 'Enter Appointment System';
+    protected $description = 'To enter our Appointment System!';
 
     /**
      * @var bool
@@ -57,7 +57,7 @@ class AppointmentCommand extends UserCommand
         $message = $this->getMessage();
 
         $chat_id = $message->getChat()->getId();
-        $text    = 'Hi there!' . PHP_EOL . 'Welcome to Ngee Ann Polytechnic\'s School of ICT\'s Open House bot\'s Appointment System! Type /createAppt to join the queue!';
+        $text    = 'Hi there!' . PHP_EOL . 'Welcome to Ngee Ann Polytechnic\'s School of ICT\'s Open House bot\'s Appointment System!' .PHP_EOL.PHP_EOL. 'Type:'.PHP_EOL.'/createAppt to join the queue, or'.PHP_EOL.'/cancelAppt to cancel your pending appointment!';
 
         $data = [
             'chat_id' => $chat_id,
