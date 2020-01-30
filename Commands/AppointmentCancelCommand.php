@@ -150,7 +150,7 @@ class cancelApptCommand extends UserCommand
                         $data['text']      = "Your queue has been cancelled.";
                     }
                     else if ($notes['choice'] == "No"){
-                        //Send stop trolling message
+                        //Send wont cancel
                         $data['text']      = "This appointment will not be cancelled.";
                     }
                     $data['reply_markup'] = Keyboard::remove(['selective' => true]);
