@@ -71,19 +71,19 @@
                 <div class="container-fluid">
                     <div class="row align-items-stretch">
                         <div class="col-md d-flex flex-column justify-content-start">
-                            <div class="card text-light bg-primary mb-3">
+                            <div class="card text-light queue mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">Today Queue</h5>
                                     <h3 class="queue-count">Fetching...</h3>
                                 </div>
                             </div>
-                            <div class="card text-light bg-success mb-3">
+                            <div class="card text-light serve mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">Today Served</h5>
                                     <h3 class="served-count">Fetching...</h3>
                                 </div>
                             </div>
-                            <div class="card text-light bg-danger mb-3">
+                            <div class="card text-light cancel mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">Today Cancelled</h5>
                                     <h3 class="cancelled-count">Fetching...</h3>

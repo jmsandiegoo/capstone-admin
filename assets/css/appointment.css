@@ -12,3 +12,15 @@
 .action-cell {
     display: flex;
 }
+
+.queue{
+    background-color: #283593;
+}
+
+.serve{
+    background-color: #3949ab;
+}
+
+.cancel{
+    background-color: #5c6bc0;
+}
