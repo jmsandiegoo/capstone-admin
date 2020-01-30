@@ -151,7 +151,7 @@ class cancelApptCommand extends UserCommand
                     }
                     else if ($notes['choice'] == "No"){
                         //Send stop trolling message
-                        $data['text']      = "Stop trolling la nabei";
+                        $data['text']      = "This appointment will not be cancelled.";
                     }
                     $data['reply_markup'] = Keyboard::remove(['selective' => true]);
                     
