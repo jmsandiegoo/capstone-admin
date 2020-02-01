@@ -109,6 +109,10 @@ class QuizCommand extends UserCommand
             case 0:
                 if ($text === '' || !in_array($text, ['Hands-on', 'Theory-based',"I'm not sure"], true)) {
                     $notes['state'] = 0;
+                    $notes['IT'] = 0;
+                    $notes['FI'] = 0;
+                    $notes['IM'] = 0;
+                    $notes['CDF'] = 0;
                     $this->conversation->update();
 
                     $data['reply_markup'] = (new Keyboard(['Hands-on', 'Theory-based',"I'm not sure"]))
