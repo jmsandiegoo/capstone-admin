@@ -237,7 +237,7 @@ class createApptCommand extends UserCommand
                             ->setResizeKeyboard(true)
                             ->setSelective(true);
 
-                        $data['text'] = 'We need your contact number to create an appointment. Please share your contact number.';
+                        $data['text'] = 'We need your contact number to create an appointment. Please share your contact number. Your mobile number will only be used to contact you for appointment purposes.';
                         
                         $result = Request::sendMessage($data);
                         break;
