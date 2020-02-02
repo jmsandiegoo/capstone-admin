@@ -77,6 +77,10 @@ class QuizCommand extends UserCommand
         $chat_id = $chat->getId();
         $user_id = $user->getId();
 
+        $notes['IT'] = 0;
+        $notes['FI'] = 0;
+        $notes['IM'] = 0;
+        $notes['CDF'] = 0;
         //Preparing Response
         $data = [
             'chat_id' => $chat_id,
@@ -109,16 +113,11 @@ class QuizCommand extends UserCommand
             case 0:
                 if ($text === '' || !in_array($text, ['Hands-on', 'Theory-based',"I'm not sure"], true)) {
                     $notes['state'] = 0;
-                    $notes['IT'] = 0;
-                    $notes['FI'] = 0;
-                    $notes['IM'] = 0;
-                    $notes['CDF'] = 0;
                     $this->conversation->update();
 
                     $data['reply_markup'] = (new Keyboard(['Hands-on', 'Theory-based',"I'm not sure"]))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '1. Do you prefer to be more hands-on or theory-based?';
                     if ($text !== '') {
@@ -153,8 +152,7 @@ class QuizCommand extends UserCommand
 
                     $data['reply_markup'] = (new Keyboard(['A','B','C','D','E']))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '2. Which of the following sounds more interesting to you?' . PHP_EOL.
                     'a.	Application development' . PHP_EOL.
@@ -199,9 +197,7 @@ class QuizCommand extends UserCommand
                     $this->conversation->update();
 
                     $data['reply_markup'] = (new Keyboard(['A','B','C','D','E']))
-                        ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                    ->setResizeKeyboard(true);
 
                     $data['text'] = '3. Which of the following sounds more interesting to you?' . PHP_EOL.
                     'a.	Creating a website' . PHP_EOL.
@@ -248,8 +244,7 @@ class QuizCommand extends UserCommand
 
                     $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '4. I believe that I am a very creative individual.';
                     if ($text !== '') {
@@ -279,8 +274,7 @@ class QuizCommand extends UserCommand
 
                     $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '5. I have a strong interest in designs and animations.';
                     if ($text !== '') {
@@ -303,8 +297,7 @@ class QuizCommand extends UserCommand
 
                     $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '6. I have a strong interest in web and applications design.';
                     if ($text !== '') {
@@ -327,8 +320,7 @@ class QuizCommand extends UserCommand
 
                     $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '7. I have a strong interest in understanding how networks and cloud applications work.';
                     if ($text !== '') {
@@ -350,8 +342,7 @@ class QuizCommand extends UserCommand
 
                     $data['reply_markup'] = (new Keyboard(['Yes', 'No']))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '8. I have a strong interest in analyzing business data and processes.';
                     if ($text !== '') {
@@ -374,8 +365,7 @@ class QuizCommand extends UserCommand
 
                     $data['reply_markup'] = (new Keyboard(['Agree', 'Disagree']))
                         ->setResizeKeyboard(true)
-                        ->setOneTimeKeyboard(true)
-                        ->setSelective(true);
+                        ;
 
                     $data['text'] = '9. I am very interested in joining the IT industry when I come out to work.';
                     if ($text !== '') {
